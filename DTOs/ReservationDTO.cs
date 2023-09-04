@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RESTaurantAPI.DTOs
 {
-    public class ReservationsDTO
+    public class ReservationDTO
     {
         [Key]
         public int Id { get; set; }
