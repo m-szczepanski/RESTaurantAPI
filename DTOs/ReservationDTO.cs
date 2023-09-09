@@ -8,8 +8,10 @@ namespace RESTaurantAPI.DTOs
         [Key]
         public int Id { get; set; }
 
-        public int CalendarId { get; set; }
-        public int TableId { get; set; }
+        public DateOnly Date { get; set; }
+
         public DateTime Hour { get; set; }
+
+        public int TableId { get; set; }
     }
 }

@@ -9,6 +9,5 @@ namespace RESTaurantAPI.DTOs
 
         public int Seats { get; set; }
         public bool Available { get; set; }
-        public int CalendarId { get; set; }
     }
 }

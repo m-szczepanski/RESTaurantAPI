@@ -9,6 +9,5 @@ namespace RESTaurantAPI.Models
 
         public int Seats { get; set; }
         public bool Available { get; set; }
-        public virtual Calendar Calendar { get; set; }
     }
 }
