@@ -72,7 +72,15 @@ namespace RESTaurantAPI.Controllers
             await tableService.UpdateTable(id, seats, availability, cancellationToken);
 
             return Ok("Table updated successfully.");
-
         }
+
+        [HttpPut("MarkAsTaken/{id}")]
+        public async Task<ActionResult> MarkAsTaken(int id, CancellationToken cancellationToken)
+        {
+            await tableService.MarkAsTaken(id, cancellationToken);
+
+            return Ok("Table's status has been changed to taken.");
+        }
+
     }
 }
