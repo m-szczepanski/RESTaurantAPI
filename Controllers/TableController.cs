@@ -82,5 +82,13 @@ namespace RESTaurantAPI.Controllers
             return Ok("Table's status has been changed to taken.");
         }
 
+        [HttpPut("MarkAsTaken/{id}")]
+        public async Task<ActionResult> MarkAsEmpty(int id, CancellationToken cancellationToken)
+        {
+            await tableService.MarkAsEmpty(id, cancellationToken);
+
+            return Ok("Table's status has been changed to available.");
+        }
+
     }
 }
