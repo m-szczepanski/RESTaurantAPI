@@ -65,7 +65,7 @@ namespace RESTaurantAPI.Controllers
 
             return Ok(tableDto);
         }
-
+        
         [HttpPut("Update/{id}")]
         public async Task<ActionResult> UpdateTable(int id, int seats, bool availability, CancellationToken cancellationToken)
         {
@@ -82,7 +82,7 @@ namespace RESTaurantAPI.Controllers
             return Ok("Table's status has been changed to taken.");
         }
 
-        [HttpPut("MarkAsTaken/{id}")]
+        [HttpPut("MarkAsEmpty/{id}")]
         public async Task<ActionResult> MarkAsEmpty(int id, CancellationToken cancellationToken)
         {
             await tableService.MarkAsEmpty(id, cancellationToken);
@@ -97,6 +97,5 @@ namespace RESTaurantAPI.Controllers
 
             return Ok("Table deleted successfully");
         }
-
     }
 }

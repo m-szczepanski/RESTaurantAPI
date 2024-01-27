@@ -9,8 +9,8 @@ namespace RESTaurantAPI.Models
 
         [Required]
         public string DishName { get; set; }
-        [Required]
-        public string[] Allergens { get; set; }
+        //[Required]
+        //public string[] Allergens { get; set; }
         [Required]
         public decimal Price { get; set; }
 

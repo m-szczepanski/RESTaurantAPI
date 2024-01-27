@@ -2,7 +2,7 @@
 
 namespace RESTaurantAPI.DTOs
 {
-    public class EmployeeDTO
+    public class EmployeeDto
     {
         [Key]
         public int Id { get; set; }
