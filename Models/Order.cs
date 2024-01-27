@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace RESTaurantAPI.Models
 {
@@ -9,7 +10,8 @@ namespace RESTaurantAPI.Models
         
         public DateTime OrderTime { get; set; }
         public int Quantity { get; set; }
+        public string Status { get; set; }
         public virtual Table Table { get; set; }
-        public Menu Menu { get; set; }
+        public Dish Dish { get; set; }
     }
 }

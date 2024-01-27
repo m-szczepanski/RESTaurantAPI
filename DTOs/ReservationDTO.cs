@@ -1,4 +1,5 @@
-﻿using RESTaurantAPI.Models;
+﻿using System;
+using RESTaurantAPI.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace RESTaurantAPI.DTOs
