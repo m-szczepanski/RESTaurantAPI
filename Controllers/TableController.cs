@@ -25,11 +25,11 @@ namespace RESTaurantAPI.Controllers
         }
 
         [HttpGet("GetAllTables")]
-        public async Task<ActionResult<List<TableDTO>>> GetAllTables(
+        public async Task<ActionResult<List<TableDto>>> GetAllTables(
             CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
             var tables = await this.tableService.GetAllTables(cancellationToken);
-            var tablesDto = this._mapper.Map<List<TableDTO>>(tables);
+            var tablesDto = this._mapper.Map<List<TableDto>>(tables);
 
             if (skip.HasValue)
             {
@@ -48,11 +48,20 @@ namespace RESTaurantAPI.Controllers
         public async Task<ActionResult<TableService>> GetTableById(int tableId, CancellationToken cancellationToken)
         {
             var table = await tableService.GetTableById(tableId, cancellationToken);
-            var tableDto = this._mapper.Map<TableDTO>(table);
+            var tableDto = this._mapper.Map<TableDto>(table);
             if (tableDto == null)
             {
                 return NotFound();
             }
+
+            return Ok(tableDto);
+        }
+
+        [HttpPost("AddTable/{seats}/{availability}")]
+        public async Task<ActionResult<TableDto>> AddStation(int seats, bool availability, CancellationToken cancellationToken)
+        {
+            var table = await this.tableService.AddTable(seats, availability, cancellationToken);
+            var tableDto = this._mapper.Map<TableDto>(table);
 
             return Ok(tableDto);
         }
