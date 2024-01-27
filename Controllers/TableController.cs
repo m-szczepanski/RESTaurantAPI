@@ -29,16 +29,29 @@ namespace RESTaurantAPI.Controllers
             CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
             var tables = await this.tableService.GetAllTables(cancellationToken);
-            var tableDto = this._mapper.Map<List<TableDTO>>(tables);
+            var tablesDto = this._mapper.Map<List<TableDTO>>(tables);
 
             if (skip.HasValue)
             {
-                tableDto = tableDto.Skip(skip.Value).ToList();
+                tablesDto = tablesDto.Skip(skip.Value).ToList();
             }
 
             if (limit.HasValue)
             {
-                tableDto = tableDto.Take(limit.Value).ToList();
+                tablesDto = tablesDto.Take(limit.Value).ToList();
+            }
+
+            return Ok(tablesDto);
+        }
+
+        [HttpGet("GetTableById/{tableId}")]
+        public async Task<ActionResult<TableService>> GetTableById(int tableId, CancellationToken cancellationToken)
+        {
+            var table = await tableService.GetTableById(tableId, cancellationToken);
+            var tableDto = this._mapper.Map<TableDTO>(table);
+            if (tableDto == null)
+            {
+                return NotFound();
             }
 
             return Ok(tableDto);
