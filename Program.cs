@@ -1,8 +1,10 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RESTaurantAPI.Data;
+using RESTaurantAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +15,36 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//services cors
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
+//app.UseCors(prodCorsPolicy);
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+//API services
+builder.Services.AddScoped<TableService>();
+//builder.Services.AddScoped<MenuService>();
+//builder.Services.AddScoped<EmployeeService>();
+//builder.Services.AddScoped<ReservationService>();
+//builder.Services.AddScoped<OrderService>();
+//builder.Services.AddScoped<DishService>();
+
+
 builder.Services.AddDbContext<APIDbContext>(options => options.UseInMemoryDatabase("localDb"));
 
 
 var app = builder.Build();
+
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -30,6 +58,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("corsapp");
 app.UseAuthorization();
+
 
 app.UseHttpsRedirection();
 
