@@ -63,7 +63,7 @@ namespace RESTaurantAPI.Services
         {
             Table table = await dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
 
-            table.Availability = true;
+            table.Availability = false;
 
             await dbContext.SaveChangesAsync(cancellationToken);
         }
@@ -73,7 +73,7 @@ namespace RESTaurantAPI.Services
             Table table = await dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
 
 
-            table.Availability = false;
+            table.Availability = true;
 
             await dbContext.SaveChangesAsync(cancellationToken);
         }
