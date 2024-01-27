@@ -8,7 +8,6 @@ namespace RESTaurantAPI.Models
         public int Id { get; set; }
 
         public int Seats { get; set; }
-        public bool Available { get; set; }
-        public virtual Calendar Calendar { get; set; }
+        public bool Availability { get; set; }
     }
 }
