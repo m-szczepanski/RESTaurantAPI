@@ -90,5 +90,13 @@ namespace RESTaurantAPI.Controllers
             return Ok("Table's status has been changed to available.");
         }
 
+        [HttpDelete("Delete/{id}")]
+        public async Task<ActionResult> DeleteTable(int id, CancellationToken cancellationToken)
+        {
+            await this.tableService.DeleteTable(id, cancellationToken);
+
+            return Ok("Table deleted successfully");
+        }
+
     }
 }
