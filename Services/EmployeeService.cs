@@ -47,6 +47,21 @@ namespace RESTaurantAPI.Services
             return employees == null ? throw new ApplicationException("No employee with that last name was found") : employees;
         }
 
+        public async Task<Employee> AddEmployee(string firstName, string lastName, string role, CancellationToken cancellationToken)
+        {
+            var newEmployee = new Employee
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Role = role,
+            };
+
+            dbContext.Employees.Add(newEmployee);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            return newEmployee;
+        }
+
 
 
     }
