@@ -48,10 +48,16 @@ namespace RESTaurantAPI.Services
             return newTable;
         }
 
+        public async Task<List<Table>> GetEmptyTableBySeatsNumber(int seatsNumber, CancellationToken cancellationToken, int? skip = null, int? limit = null)
+        {
+            var tables = await dbContext.Tables.Where(s => s.Seats == seatsNumber && s.Availability == true).ToListAsync(cancellationToken);
+
+            return tables == null ? throw new ApplicationException("No table with that number of seats is available at the moment.") : tables;
+        }
+
         public async Task UpdateTable(int tableId, int seats, bool availability, CancellationToken cancellationToken)
         {
             Table table = await dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
-
 
             table.Seats = seats;
             table.Availability = availability;
