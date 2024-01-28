@@ -57,6 +57,20 @@ namespace RESTaurantAPI.Controllers
             return Ok(tableDto);
         }
 
+        [HttpGet("GetEmptyTableBySeatsNumber/{seatsNumber}")]
+        public async Task<ActionResult<List<TableDto>>> GetEmptyTableBySeatsNumber(int seatsNumber, CancellationToken cancellationToken)
+        {
+            var tables = await tableService.GetEmptyTableBySeatsNumber(seatsNumber, cancellationToken);
+            var tablesDto = this._mapper.Map<List<TableDto>>(tables);
+
+            if (tablesDto == null || tablesDto.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(tablesDto);
+        }
+
         [HttpPost("AddTable")]
         public async Task<ActionResult<TableDto>> AddTable(int seats, bool availability, CancellationToken cancellationToken)
         {
