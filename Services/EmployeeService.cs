@@ -96,8 +96,5 @@ namespace RESTaurantAPI.Services
             dbContext.Employees.Remove(employee);
             await dbContext.SaveChangesAsync(cancellationToken);
         }
-
-
-
     }
 }
