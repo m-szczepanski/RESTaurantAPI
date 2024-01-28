@@ -28,7 +28,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //API services
 builder.Services.AddScoped<TableService>();
 //builder.Services.AddScoped<MenuService>();
-//builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<EmployeeService>();
 //builder.Services.AddScoped<ReservationService>();
 //builder.Services.AddScoped<OrderService>();
 //builder.Services.AddScoped<DishService>();
