@@ -58,7 +58,7 @@ namespace RESTaurantAPI.Controllers
         }
 
         [HttpPost("AddTable")]
-        public async Task<ActionResult<TableDto>> AddStation(int seats, bool availability, CancellationToken cancellationToken)
+        public async Task<ActionResult<TableDto>> AddTable(int seats, bool availability, CancellationToken cancellationToken)
         {
             var table = await this.tableService.AddTable(seats, availability, cancellationToken);
             var tableDto = this._mapper.Map<TableDto>(table);
