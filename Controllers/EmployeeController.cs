@@ -42,5 +42,18 @@ namespace RESTaurantAPI.Controllers
 
             return Ok(employeesDto);
         }
+
+        [HttpGet("GetEmployeeById/{employeeId}")]
+        public async Task<ActionResult<EmployeeService>> GetEmployeeById(int employeeId, CancellationToken cancellationToken)
+        {
+            var employee = await employeeService.GetEmployeeById(employeeId, cancellationToken);
+            var employeeDto = this._mapper.Map<TableDto>(employee);
+            if (employeeDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(employeeDto);
+        }
     }
 }
