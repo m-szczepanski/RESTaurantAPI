@@ -62,6 +62,41 @@ namespace RESTaurantAPI.Services
             return newEmployee;
         }
 
+        public async Task UpdateEmployee(int employeeId, string firstName, string lastName, string role, CancellationToken cancellationToken)
+        {
+            Employee employee = await dbContext.Employees.FirstOrDefaultAsync(s => s.Id == employeeId, cancellationToken);
+
+
+            employee.FirstName = firstName;
+            employee.LastName = lastName;
+            employee.Role = role;
+
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateRole(int employeeId, string role, CancellationToken cancellationToken)
+        {
+            Employee employee = await dbContext.Employees.FirstOrDefaultAsync(s => s.Id == employeeId, cancellationToken);
+
+
+            employee.Role = role;
+
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task DeleteEmployee(int employeeId, CancellationToken cancellationToken)
+        {
+            var employee = await dbContext.Employees.FirstOrDefaultAsync(x => x.Id == employeeId, cancellationToken);
+
+            if (employee == null)
+            {
+                throw new ApplicationException("Employee with that id exists.");
+            }
+
+            dbContext.Employees.Remove(employee);
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+
 
 
     }

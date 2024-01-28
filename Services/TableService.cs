@@ -31,7 +31,7 @@ namespace RESTaurantAPI.Services
         {
             var table = await dbContext.Tables.Where(x => x.Id == tableId).FirstOrDefaultAsync(cancellationToken);
 
-            return table == null ? throw new ApplicationException("No station found") : table;
+            return table == null ? throw new ApplicationException("No table found") : table;
         }
 
         public async Task<Table> AddTable(int seats, bool availability, CancellationToken cancellationToken)
@@ -84,7 +84,7 @@ namespace RESTaurantAPI.Services
 
             if (table == null)
             {
-                throw new ApplicationException("You don't have permission to complete this action or station with that id exists.");
+                throw new ApplicationException("You don't have permission to complete this action or table with that id exists.");
             }
 
             dbContext.Tables.Remove(table);
