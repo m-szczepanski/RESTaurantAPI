@@ -14,7 +14,7 @@ namespace RESTaurantAPI
 
             // Employee
             CreateMap<Employee, EmployeeDto>();
-            CreateMap<EmployeeDto, EmployeeDto>();
+            CreateMap<EmployeeDto, Employee>();
 
             // Dish
             CreateMap<Dish, DishDto>();
@@ -30,9 +30,14 @@ namespace RESTaurantAPI
             CreateMap<Order, OrderDto>()
                 .ForMember(dest => dest.DishId, opt => opt.MapFrom(src => src.Dish.Id))
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.Table.Id));
+            //CreateMap<OrderDto, Order>()
+            //  .ForMember(dest => dest.Dish, opt => opt.MapFrom(src => src.DishId))
+            //.ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.TableId));
+            // OrderDto to Order
             CreateMap<OrderDto, Order>()
-                .ForMember(dest => dest.Dish, opt => opt.MapFrom(src => src.DishId))
-                .ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.TableId));
+                .ForMember(dest => dest.Dish, opt => opt.MapFrom(src => new Dish() { Id = src.DishId })) // Poprawa
+                .ForMember(dest => dest.Table, opt => opt.MapFrom(src => new Table() { Id = src.TableId })); // Poprawa
+
 
             // User
             CreateMap<Menu, MenuDto>()

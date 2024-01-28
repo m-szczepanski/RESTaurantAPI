@@ -40,20 +40,22 @@ namespace RESTaurantAPI.Services
             return employees == null ? throw new ApplicationException("No employee with that role was found") : employees;
         }
 
-        public async Task<List<Employee>> GetEmployeeByLastName(string lastName, CancellationToken cancellationToken)
+        public async Task<List<Employee>> GetEmployeesByLastName(string lastName, CancellationToken cancellationToken)
         {
             var employees = await dbContext.Employees.Where(x => x.LastName == lastName).ToListAsync(cancellationToken);
 
             return employees == null ? throw new ApplicationException("No employee with that last name was found") : employees;
         }
 
-        public async Task<Employee> AddEmployee(string firstName, string lastName, string role, CancellationToken cancellationToken)
+        public async Task<Employee> AddEmployee(string firstName, string lastName, string role, string email, string phoneNumber, CancellationToken cancellationToken)
         {
             var newEmployee = new Employee
             {
                 FirstName = firstName,
                 LastName = lastName,
                 Role = role,
+                Email = email,
+                PhoneNumber = phoneNumber,
             };
 
             dbContext.Employees.Add(newEmployee);
@@ -62,14 +64,15 @@ namespace RESTaurantAPI.Services
             return newEmployee;
         }
 
-        public async Task UpdateEmployee(int employeeId, string firstName, string lastName, string role, CancellationToken cancellationToken)
+        public async Task UpdateEmployee(int employeeId, string firstName, string lastName, string role, string email, string phoneNumber, CancellationToken cancellationToken)
         {
             Employee employee = await dbContext.Employees.FirstOrDefaultAsync(s => s.Id == employeeId, cancellationToken);
-
 
             employee.FirstName = firstName;
             employee.LastName = lastName;
             employee.Role = role;
+            employee.Email = email;
+            employee.PhoneNumber = phoneNumber;
 
             await dbContext.SaveChangesAsync(cancellationToken);
         }

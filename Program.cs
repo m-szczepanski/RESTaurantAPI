@@ -28,7 +28,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //API services
 builder.Services.AddScoped<TableService>();
 //builder.Services.AddScoped<MenuService>();
-//builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<EmployeeService>();
 //builder.Services.AddScoped<ReservationService>();
 //builder.Services.AddScoped<OrderService>();
 //builder.Services.AddScoped<DishService>();
@@ -39,12 +39,6 @@ builder.Services.AddDbContext<APIDbContext>(options => options.UseInMemoryDataba
 
 var app = builder.Build();
 
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
