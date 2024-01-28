@@ -44,10 +44,10 @@ namespace RESTaurantAPI.Controllers
         }
 
         [HttpGet("GetEmployeeById/{employeeId}")]
-        public async Task<ActionResult<EmployeeService>> GetEmployeeById(int employeeId, CancellationToken cancellationToken)
+        public async Task<ActionResult<EmployeeDto>> GetEmployeeById(int employeeId, CancellationToken cancellationToken)
         {
             var employee = await employeeService.GetEmployeeById(employeeId, cancellationToken);
-            var employeeDto = this._mapper.Map<TableDto>(employee);
+            var employeeDto = this._mapper.Map<EmployeeDto>(employee);
             if (employeeDto == null)
             {
                 return NotFound();
@@ -55,5 +55,33 @@ namespace RESTaurantAPI.Controllers
 
             return Ok(employeeDto);
         }
+
+        [HttpGet("GetEmployeesByRole/{role}")]
+        public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesByRole(string role, CancellationToken cancellationToken)
+        {
+            var employee = await employeeService.GetEmployeesByRole(role, cancellationToken);
+            var employeeDto = this._mapper.Map<EmployeeDto>(employee);
+            if (employeeDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(employeeDto);
+        }
+
+        [HttpGet("GetEmployeesByLastName/{lastName}")]
+        public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesByLastName(string lastName, CancellationToken cancellationToken)
+        {
+            var employee = await employeeService.GetEmployeesByLastName(lastName, cancellationToken);
+            var employeeDto = this._mapper.Map<EmployeeDto>(employee);
+            if (employeeDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(employeeDto);
+        }
+
+
     }
 }

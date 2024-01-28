@@ -40,7 +40,7 @@ namespace RESTaurantAPI.Services
             return employees == null ? throw new ApplicationException("No employee with that role was found") : employees;
         }
 
-        public async Task<List<Employee>> GetEmployeeByLastName(string lastName, CancellationToken cancellationToken)
+        public async Task<List<Employee>> GetEmployeesByLastName(string lastName, CancellationToken cancellationToken)
         {
             var employees = await dbContext.Employees.Where(x => x.LastName == lastName).ToListAsync(cancellationToken);
 

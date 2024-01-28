@@ -45,7 +45,7 @@ namespace RESTaurantAPI.Controllers
         }
 
         [HttpGet("GetTableById/{tableId}")]
-        public async Task<ActionResult<TableService>> GetTableById(int tableId, CancellationToken cancellationToken)
+        public async Task<ActionResult<TableDto>> GetTableById(int tableId, CancellationToken cancellationToken)
         {
             var table = await tableService.GetTableById(tableId, cancellationToken);
             var tableDto = this._mapper.Map<TableDto>(table);
