@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using RESTaurantAPI.Models;
 
 namespace RESTaurantAPI.DTOs
 {
@@ -8,7 +9,8 @@ namespace RESTaurantAPI.DTOs
         public int Id { get; set; }
 
         [Required]
-        public string DishName { get; set; }
+        //public string DishName { get; set; }
+        public List<Dish> Dishes { get; set; }
         public string Quisine { get; set; }
         [Required]
         public string[] Ingredients { get; set; }

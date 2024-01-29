@@ -27,6 +27,13 @@ namespace RESTaurantAPI.Services
             return dishes == null ? throw new ApplicationException("No dishes are in the database right now.") : dishes;
         }
 
+        public async Task<Dish> GetDishById(int dishId, CancellationToken cancellationToken)
+        {
+            var dish = await dbContext.Dishes.Where(x => x.Id == dishId).FirstOrDefaultAsync(cancellationToken);
+
+            return dish == null ? throw new ApplicationException("No employee found") : dish;
+        }
+
 
         public async Task<Dish> AddDish(string dishName, string[] allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
         {
