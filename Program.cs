@@ -31,7 +31,7 @@ builder.Services.AddScoped<TableService>();
 builder.Services.AddScoped<EmployeeService>();
 //builder.Services.AddScoped<ReservationService>();
 //builder.Services.AddScoped<OrderService>();
-//builder.Services.AddScoped<DishService>();
+builder.Services.AddScoped<DishService>();
 
 
 builder.Services.AddDbContext<APIDbContext>(options => options.UseInMemoryDatabase("localDb"));
