@@ -9,7 +9,6 @@ namespace RESTaurantAPI.DTOs
         public int Id { get; set; }
 
         [Required]
-        //public string DishName { get; set; }
         public List<Dish> Dishes { get; set; }
         public string Quisine { get; set; }
         [Required]
