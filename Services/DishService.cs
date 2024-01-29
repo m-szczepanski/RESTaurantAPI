@@ -79,9 +79,9 @@ namespace RESTaurantAPI.Services
                 query = query.Where(d => d.DishName.Contains(dishName));
             }
 
-            if (allergens != null && allergens.Any())
+            if (!string.IsNullOrWhiteSpace(allergens))
             {
-                query = query.Where(d => d.Allergens.Intersect(allergens).Any());
+                query = query.Where(d => d.Allergens.Contains(allergens));
             }
 
             if (maxPrice.HasValue)
@@ -118,6 +118,7 @@ namespace RESTaurantAPI.Services
 
             return result;
         }
+
 
         public async Task<Dish> AddDish(string dishName, string allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
         {

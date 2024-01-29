@@ -44,6 +44,122 @@ namespace RESTaurantAPI.Controllers
             return Ok(dishesDto);
         }
 
+        [HttpGet("GetDishById/{dishId}")]
+        public async Task<ActionResult<DishDto>> GetDishById(int dishId,
+            CancellationToken cancellationToken)
+        {
+            var dish = await dishService.GetDishById(dishId, cancellationToken);
+            var dishDto = this._mapper.Map<DishDto>(dish);
+            if (dishDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(dishDto);
+        }
+
+        [HttpGet("GetDishByName/{dishName}")]
+        public async Task<ActionResult<List<DishDto>>> GetDishByName(string dishName, CancellationToken cancellationToken)
+        {
+            var dish = await dishService.GetDishByName(dishName, cancellationToken);
+            var dishDto = this._mapper.Map<List<DishDto>>(dish);
+
+            if (dishDto == null || dishDto.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(dishDto);
+        }
+
+        [HttpGet("GetDishesFromCuisine/{cuisine}")]
+        public async Task<ActionResult<List<DishDto>>> GetDishesFromCuisine(string cuisine, CancellationToken cancellationToken)
+        {
+            var dish = await dishService.GetDishesFromCuisine(cuisine, cancellationToken);
+            var dishDto = this._mapper.Map<List<DishDto>>(dish);
+
+            if (dishDto == null || dishDto.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(dishDto);
+        }
+
+        [HttpGet("GetVeganDishes")]
+        public async Task<ActionResult<List<DishDto>>> GetVeganDishes(CancellationToken cancellationToken)
+        {
+            var dish = await dishService.GetVeganDishes(cancellationToken);
+            var dishDto = this._mapper.Map<List<DishDto>>(dish);
+
+            if (dishDto == null || dishDto.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(dishDto);
+        }
+
+        [HttpGet("GetVegetarianDishes")]
+        public async Task<ActionResult<List<DishDto>>> GetVegetarianDishes(CancellationToken cancellationToken)
+        {
+            var dish = await dishService.GetVegetarianDishes(cancellationToken);
+            var dishDto = this._mapper.Map<List<DishDto>>(dish);
+
+            if (dishDto == null || dishDto.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(dishDto);
+        }
+
+        [HttpGet("GetSpicyDishes")]
+        public async Task<ActionResult<List<DishDto>>> GetSpicyDishes(CancellationToken cancellationToken)
+        {
+            var dish = await dishService.GetSpicyDishes(cancellationToken);
+            var dishDto = this._mapper.Map<List<DishDto>>(dish);
+
+            if (dishDto == null || dishDto.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(dishDto);
+        }
+
+        [HttpGet("GetDishesByParameters")]
+        public async Task<ActionResult<List<DishDto>>> GetDishesByParameters(
+            string dishName = null,
+            string allergens = null,
+            decimal? maxPrice = null,
+            string cuisine = null,
+            bool? vegetarian = null,
+            bool? vegan = null,
+            bool? spicy = null,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var dishes = await dishService.GetDishesByParameters(
+                    dishName, allergens, maxPrice, cuisine, vegetarian, vegan, spicy, cancellationToken);
+
+                var dishDto = this._mapper.Map<List<DishDto>>(dishes);
+
+                if (dishes == null || dishes.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(dishDto);
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpPost("AddDish")]
         public async Task<ActionResult<DishDto>> AddDish(string dishName, string allergens, decimal price, string cuisine, bool vegetarian, 
             bool vegan, bool spicy, CancellationToken cancellationToken)
