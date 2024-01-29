@@ -93,7 +93,7 @@ namespace RESTaurantAPI.Services
 
             if (employee == null)
             {
-                throw new ApplicationException("Employee with that id exists.");
+                throw new ApplicationException("Employee with that id doesn't exists.");
             }
 
             dbContext.Employees.Remove(employee);

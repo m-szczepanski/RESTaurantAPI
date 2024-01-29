@@ -39,11 +39,16 @@ namespace RESTaurantAPI
                 .ForMember(dest => dest.Table, opt => opt.MapFrom(src => new Table() { Id = src.TableId })); // Poprawa
 
 
-            // User
+            // Menu
+            //CreateMap<Menu, MenuDto>()
+            //.ForMember(dest => dest.DishName, opt => opt.MapFrom(src => src.Dish.DishName));
+            //CreateMap<MenuDto, Menu>()
+            //.ForMember(dest => dest.Dish, opt => opt.MapFrom(src => new Dish() { DishName = src.DishName }));
             CreateMap<Menu, MenuDto>()
-                .ForMember(dest => dest.DishName, opt => opt.MapFrom(src => src.Dish.DishName));
+                .ForMember(dest => dest.Dishes, opt => opt.MapFrom(src => src.Dishes));
             CreateMap<MenuDto, Menu>()
-                .ForMember(dest => dest.Dish, opt => opt.MapFrom(src => new Dish() { DishName = src.DishName }));
+                .ForMember(dest => dest.Dishes, opt => opt.MapFrom(src => src.Dishes));
+
 
         }
     }
