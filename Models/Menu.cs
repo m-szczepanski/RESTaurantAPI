@@ -8,7 +8,6 @@ namespace RESTaurantAPI.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        //public Dish Dish { get; set; }
         public List<Dish> Dishes { get; set; }
         public DateOnly Date { get; set; }
     }
