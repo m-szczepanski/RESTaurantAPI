@@ -90,7 +90,7 @@ namespace RESTaurantAPI.Services
 
             if (table == null)
             {
-                throw new ApplicationException("You don't have permission to complete this action or table with that id exists.");
+                throw new ApplicationException("Table with that id doesn't exists.");
             }
 
             dbContext.Tables.Remove(table);
