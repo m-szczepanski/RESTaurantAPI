@@ -41,9 +41,9 @@ namespace RESTaurantAPI.Services
             return dishes == null ? throw new ApplicationException("No employee with that last name was found") : dishes;
         }
 
-        public async Task<List<Dish>> GetDishesFromCusine(string cusine, CancellationToken cancellationToken)
+        public async Task<List<Dish>> GetDishesFromCusine(string cuisine, CancellationToken cancellationToken)
         {
-            var dishes = await dbContext.Dishes.Where(x => x.Cuisine == cusine).ToListAsync(cancellationToken);
+            var dishes = await dbContext.Dishes.Where(x => x.Cuisine == cuisine).ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No employee with that last name was found") : dishes;
         }
