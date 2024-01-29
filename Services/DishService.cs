@@ -31,23 +31,43 @@ namespace RESTaurantAPI.Services
         {
             var dish = await dbContext.Dishes.Where(x => x.Id == dishId).FirstOrDefaultAsync(cancellationToken);
 
-            return dish == null ? throw new ApplicationException("No employee found") : dish;
+            return dish == null ? throw new ApplicationException("No dishes were found") : dish;
         }
 
         public async Task<List<Dish>> GetDishByName(string dishName, CancellationToken cancellationToken)
         {
             var dishes = await dbContext.Dishes.Where(x => x.DishName == dishName).ToListAsync(cancellationToken);
 
-            return dishes == null ? throw new ApplicationException("No employee with that last name was found") : dishes;
+            return dishes == null ? throw new ApplicationException("No dish with that name was found") : dishes;
         }
 
         public async Task<List<Dish>> GetDishesFromCuisine(string cuisine, CancellationToken cancellationToken)
         {
             var dishes = await dbContext.Dishes.Where(x => x.Cuisine == cuisine).ToListAsync(cancellationToken);
 
-            return dishes == null ? throw new ApplicationException("No employee with that last name was found") : dishes;
+            return dishes == null ? throw new ApplicationException("No dishes with that cuisine were found") : dishes;
+        }
+        
+        public async Task<List<Dish>> GetVeganDishes(CancellationToken cancellationToken)
+        {
+            var dishes = await dbContext.Dishes.Where(x => x.Vegan == true).ToListAsync(cancellationToken);
+
+            return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }
 
+        public async Task<List<Dish>> GetVegetarianDishes(CancellationToken cancellationToken)
+        {
+            var dishes = await dbContext.Dishes.Where(x => x.Vegetarian == true).ToListAsync(cancellationToken);
+
+            return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
+        }
+
+        public async Task<List<Dish>> GetSpicyDishes(CancellationToken cancellationToken)
+        {
+            var dishes = await dbContext.Dishes.Where(x => x.Spicy == true).ToListAsync(cancellationToken);
+
+            return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
+        }
 
         public async Task<Dish> AddDish(string dishName, string[] allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
         {
