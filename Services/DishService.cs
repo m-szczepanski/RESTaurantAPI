@@ -69,6 +69,56 @@ namespace RESTaurantAPI.Services
             return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }
 
+        public async Task<List<Dish>> GetDishesByParameters(string dishName = null, string[] allergens = null, decimal? maxPrice = null,
+            string cuisine = null, bool? vegetarian = null, bool? vegan = null, bool? spicy = null, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Dish> query = dbContext.Dishes.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(dishName))
+            {
+                query = query.Where(d => d.DishName.Contains(dishName));
+            }
+
+            if (allergens != null && allergens.Any())
+            {
+                query = query.Where(d => d.Allergens.Intersect(allergens).Any());
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(d => d.Price <= maxPrice.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(cuisine))
+            {
+                query = query.Where(d => d.Cuisine.Equals(cuisine, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (vegetarian.HasValue)
+            {
+                query = query.Where(d => d.Vegetarian == vegetarian.Value);
+            }
+
+            if (vegan.HasValue)
+            {
+                query = query.Where(d => d.Vegan == vegan.Value);
+            }
+
+            if (spicy.HasValue)
+            {
+                query = query.Where(d => d.Spicy == spicy.Value);
+            }
+
+            var result = await query.ToListAsync(cancellationToken);
+
+            if (result == null || result.Count == 0)
+            {
+                throw new ApplicationException("No dishes match the specified criteria.");
+            }
+
+            return result;
+        }
+
         public async Task<Dish> AddDish(string dishName, string[] allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
         {
             var newDish = new Dish
