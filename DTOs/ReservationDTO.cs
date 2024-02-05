@@ -13,6 +13,8 @@ namespace RESTaurantAPI.DTOs
 
         public DateTime Hour { get; set; }
 
+        public int NumberOfSeats { get; set; }
+
         public int TableId { get; set; }
     }
 }
