@@ -73,7 +73,6 @@ namespace RESTaurantAPI.Controllers
             return Ok(employeesDto);
         }
 
-
         [HttpGet("GetEmployeesByLastName/{lastName}")]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesByLastName(string lastName, CancellationToken cancellationToken)
         {
@@ -87,7 +86,6 @@ namespace RESTaurantAPI.Controllers
 
             return Ok(employeesDto);
         }
-
 
         [HttpPost("AddEmployee")]
         public async Task<ActionResult<EmployeeDto>> AddEmployee(string firstName, string lastName, string role,

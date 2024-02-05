@@ -69,7 +69,7 @@ namespace RESTaurantAPI.Services
             return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }
 
-        public async Task<List<Dish>> GetDishesByParameters(string dishName = null, string[] allergens = null, decimal? maxPrice = null,
+        public async Task<List<Dish>> GetDishesByParameters(string dishName = null, string allergens = null, decimal? maxPrice = null,
             string cuisine = null, bool? vegetarian = null, bool? vegan = null, bool? spicy = null, CancellationToken cancellationToken = default)
         {
             IQueryable<Dish> query = dbContext.Dishes.AsQueryable();
@@ -79,9 +79,9 @@ namespace RESTaurantAPI.Services
                 query = query.Where(d => d.DishName.Contains(dishName));
             }
 
-            if (allergens != null && allergens.Any())
+            if (!string.IsNullOrWhiteSpace(allergens))
             {
-                query = query.Where(d => d.Allergens.Intersect(allergens).Any());
+                query = query.Where(d => d.Allergens.Contains(allergens));
             }
 
             if (maxPrice.HasValue)
@@ -119,7 +119,8 @@ namespace RESTaurantAPI.Services
             return result;
         }
 
-        public async Task<Dish> AddDish(string dishName, string[] allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
+
+        public async Task<Dish> AddDish(string dishName, string? allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
         {
             var newDish = new Dish
             {
@@ -138,7 +139,7 @@ namespace RESTaurantAPI.Services
             return newDish;
         }
 
-        public async Task UpdateDish(int dishId, string dishName, string[] allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
+        public async Task UpdateDish(int dishId, string dishName, string allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
         {
             Dish dish = await dbContext.Dishes.FirstOrDefaultAsync(s => s.Id == dishId, cancellationToken);
 
