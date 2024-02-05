@@ -130,13 +130,13 @@ namespace RESTaurantAPI.Controllers
 
         [HttpGet("GetDishesByParameters")]
         public async Task<ActionResult<List<DishDto>>> GetDishesByParameters(
-            string dishName = null,
-            string allergens = null,
-            decimal? maxPrice = null,
-            string cuisine = null,
-            bool? vegetarian = null,
-            bool? vegan = null,
-            bool? spicy = null,
+            [FromQuery] string? dishName = null,
+            [FromQuery] string? allergens = null,
+            [FromQuery] decimal? maxPrice = null,
+            [FromQuery] string? cuisine = null,
+            [FromQuery] bool? vegetarian = null,
+            [FromQuery] bool? vegan = null,
+            [FromQuery] bool? spicy = null,
             CancellationToken cancellationToken = default)
         {
             try
@@ -161,7 +161,7 @@ namespace RESTaurantAPI.Controllers
 
 
         [HttpPost("AddDish")]
-        public async Task<ActionResult<DishDto>> AddDish(string dishName, string allergens, decimal price, string cuisine, bool vegetarian, 
+        public async Task<ActionResult<DishDto>> AddDish(string dishName, string? allergens, decimal price, string cuisine, bool vegetarian, 
             bool vegan, bool spicy, CancellationToken cancellationToken)
         {
             var dish = await this.dishService.AddDish(dishName, allergens, price, cuisine, vegetarian, vegan, spicy, cancellationToken);
