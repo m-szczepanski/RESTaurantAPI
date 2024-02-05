@@ -12,16 +12,16 @@ namespace RESTaurantAPI.Services
 {
     public class DishService
     {
-        private readonly APIDbContext dbContext;
+        private readonly APIDbContext _dbContext;
 
         public DishService(APIDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            this._dbContext = dbContext;
         }
 
         public async Task<List<Dish>> GetAllDishes(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var dishes = await dbContext.Dishes
+            var dishes = await _dbContext.Dishes
                 .ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes are in the database right now.") : dishes;
@@ -29,42 +29,42 @@ namespace RESTaurantAPI.Services
 
         public async Task<Dish> GetDishById(int dishId, CancellationToken cancellationToken)
         {
-            var dish = await dbContext.Dishes.Where(x => x.Id == dishId).FirstOrDefaultAsync(cancellationToken);
+            var dish = await _dbContext.Dishes.Where(x => x.Id == dishId).FirstOrDefaultAsync(cancellationToken);
 
-            return dish == null ? throw new ApplicationException("No dishes were found") : dish;
+            return dish == null ? throw new ApplicationException("No dish was found") : dish;
         }
 
         public async Task<List<Dish>> GetDishByName(string dishName, CancellationToken cancellationToken)
         {
-            var dishes = await dbContext.Dishes.Where(x => x.DishName == dishName).ToListAsync(cancellationToken);
+            var dishes = await _dbContext.Dishes.Where(x => x.DishName == dishName).ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dish with that name was found") : dishes;
         }
 
         public async Task<List<Dish>> GetDishesFromCuisine(string cuisine, CancellationToken cancellationToken)
         {
-            var dishes = await dbContext.Dishes.Where(x => x.Cuisine == cuisine).ToListAsync(cancellationToken);
+            var dishes = await _dbContext.Dishes.Where(x => x.Cuisine == cuisine).ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes with that cuisine were found") : dishes;
         }
         
         public async Task<List<Dish>> GetVeganDishes(CancellationToken cancellationToken)
         {
-            var dishes = await dbContext.Dishes.Where(x => x.Vegan == true).ToListAsync(cancellationToken);
+            var dishes = await _dbContext.Dishes.Where(x => x.Vegan == true).ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }
 
         public async Task<List<Dish>> GetVegetarianDishes(CancellationToken cancellationToken)
         {
-            var dishes = await dbContext.Dishes.Where(x => x.Vegetarian == true).ToListAsync(cancellationToken);
+            var dishes = await _dbContext.Dishes.Where(x => x.Vegetarian == true).ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }
 
         public async Task<List<Dish>> GetSpicyDishes(CancellationToken cancellationToken)
         {
-            var dishes = await dbContext.Dishes.Where(x => x.Spicy == true).ToListAsync(cancellationToken);
+            var dishes = await _dbContext.Dishes.Where(x => x.Spicy == true).ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }
@@ -72,7 +72,7 @@ namespace RESTaurantAPI.Services
         public async Task<List<Dish>> GetDishesByParameters(string dishName = null, string allergens = null, decimal? maxPrice = null,
             string cuisine = null, bool? vegetarian = null, bool? vegan = null, bool? spicy = null, CancellationToken cancellationToken = default)
         {
-            IQueryable<Dish> query = dbContext.Dishes.AsQueryable();
+            IQueryable<Dish> query = _dbContext.Dishes.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(dishName))
             {
@@ -133,15 +133,15 @@ namespace RESTaurantAPI.Services
                 Spicy = spicy
             };
 
-            dbContext.Dishes.Add(newDish);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            _dbContext.Dishes.Add(newDish);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return newDish;
         }
 
         public async Task UpdateDish(int dishId, string dishName, string allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
         {
-            Dish dish = await dbContext.Dishes.FirstOrDefaultAsync(s => s.Id == dishId, cancellationToken);
+            Dish dish = await _dbContext.Dishes.FirstOrDefaultAsync(s => s.Id == dishId, cancellationToken);
 
             dish.DishName = dishName;
             dish.Allergens = allergens;
@@ -151,20 +151,14 @@ namespace RESTaurantAPI.Services
             dish.Vegan = vegan;
             dish.Spicy = spicy;
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteDish(int dishId, CancellationToken cancellationToken)
         {
-            var dish = await dbContext.Dishes.FirstOrDefaultAsync(x => x.Id == dishId, cancellationToken);
-
-            if (dish == null)
-            {
-                throw new ApplicationException("Dish with that id doesn't exists.");
-            }
-
-            dbContext.Dishes.Remove(dish);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            var dish = await _dbContext.Dishes.FirstOrDefaultAsync(x => x.Id == dishId, cancellationToken) ?? throw new ApplicationException("Dish with that id doesn't exist.");
+            _dbContext.Dishes.Remove(dish);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

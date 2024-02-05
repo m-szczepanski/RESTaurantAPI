@@ -8,10 +8,13 @@ namespace RESTaurantAPI.Models
         [Key]
         public int Id { get; set; }
 
-        public DateOnly Date { get; set; }
+        [Required]
+        public DateTime Date { get; set; }
 
-        public DateTime Hour { get; set; }
+        [Required]
+        public TimeOnly Hour { get; set; }
 
+        public int NumberOfSeats { get; set; }
         public virtual Table Table { get; set; }
 
     }
