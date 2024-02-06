@@ -39,5 +39,13 @@ namespace RESTaurantAPI.Controllers
 
             return Ok("The order has been delivered.");
         }
+
+        [HttpDelete("Delete{id}")]
+        public async Task<ActionResult> DeleteOrder(int id, CancellationToken cancellationToken)
+        {
+            await this.orderService.DeleteOrder(id, cancellationToken);
+
+            return Ok("Order has been deleted.");
+        }
     }
 }

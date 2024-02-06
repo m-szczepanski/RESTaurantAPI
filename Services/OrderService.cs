@@ -49,5 +49,18 @@ namespace RESTaurantAPI.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        public async Task DeleteOrder(int id, CancellationToken cancellationToken)
+        {
+            var order = await _dbContext.Orders.FirstOrDefaultAsync(x=>x.Id == id, cancellationToken);
+
+            if (order == null)
+            {
+                throw new ApplicationException("Table with that id doesn't exists.");
+            }
+
+            _dbContext.Orders.Remove(order);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }
