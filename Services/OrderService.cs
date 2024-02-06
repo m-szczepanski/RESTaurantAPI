@@ -20,7 +20,7 @@ namespace RESTaurantAPI.Services
             this._dbContext = dbContext;
         }
 
-        public async Task<Order> AddOrder(DateTime orderTime, int quantity, string status, int tableId, int dishId, CancellationToken cancellationToken)
+        public async Task<Order> AddOrder(int quantity, int tableId, int dishId, CancellationToken cancellationToken)
         {
 
             Table table = await _dbContext.Tables.GetTableById(tableId, cancellationToken);
@@ -28,9 +28,9 @@ namespace RESTaurantAPI.Services
 
             var newOrder = new Order
             {
-                OrderTime = orderTime,
+                OrderTime = DateTime.Now,
                 Quantity = quantity,
-                Status = status,
+                Status = "in preparation",
                 Dish = dish,
                 Table = table,
             };
@@ -39,6 +39,15 @@ namespace RESTaurantAPI.Services
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return newOrder;
+        }
+
+        public async Task MarkAsDelivered(int orderId, CancellationToken cancellationToken)
+        {
+            Order order = await _dbContext.Orders.FirstOrDefaultAsync(s => s.Id == orderId, cancellationToken);
+
+            order.Status = "delivered";
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

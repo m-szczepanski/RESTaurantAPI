@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RESTaurantAPI.DTOs;
-using RESTaurantAPI.Models;
 using RESTaurantAPI.Services;
 
 namespace RESTaurantAPI.Controllers
@@ -25,12 +24,20 @@ namespace RESTaurantAPI.Controllers
         }
 
         [HttpPost("AddOrder")]
-        public async Task<ActionResult<OrderDto>> AddOrder(DateTime orderTime, int quantity, string status, int tableId, int dishId, CancellationToken cancellationToken)
+        public async Task<ActionResult<OrderDto>> AddOrder(int quantity, int tableId, int dishId, CancellationToken cancellationToken)
         {
-            var order = await this.orderService.AddOrder(orderTime, quantity, status, tableId, dishId, cancellationToken);
+            var order = await this.orderService.AddOrder(quantity, tableId, dishId, cancellationToken);
             var orderDto = this._mapper.Map<OrderDto>(order);
 
             return Ok(orderDto);
+        }
+
+        [HttpPut("MarkAsDelivered/{id}")]
+        public async Task<ActionResult> MarkAsDelivered(int id, CancellationToken cancellationToken)
+        {
+            await orderService.MarkAsDelivered(id, cancellationToken);
+
+            return Ok("The order has been delivered.");
         }
     }
 }
