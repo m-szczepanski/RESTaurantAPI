@@ -119,7 +119,6 @@ namespace RESTaurantAPI.Services
             return result;
         }
 
-
         public async Task<Dish> AddDish(string dishName, string? allergens, decimal price, string cuisine, bool vegetarian, bool vegan, bool spicy, CancellationToken cancellationToken)
         {
             var newDish = new Dish

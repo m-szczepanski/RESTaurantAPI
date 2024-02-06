@@ -51,6 +51,14 @@ namespace RESTaurantAPI.Services
             return orders == null ? throw new ApplicationException("There are no orders that are in progress.") : orders;
         }
 
+        public async Task<List<Order>> GetAllTablesOrders(int tableId, CancellationToken cancellationToken, int? skip = null, int? limit = null)
+        {
+            var orders = await _dbContext.Orders.Where(x => x.Table.Id == tableId)
+                .ToListAsync(cancellationToken);
+
+            return orders == null ? throw new ApplicationException("There are no orders that are in progress.") : orders;
+        }
+
         public async Task<Order> AddOrder(int quantity, int tableId, int dishId, CancellationToken cancellationToken)
         {
 
