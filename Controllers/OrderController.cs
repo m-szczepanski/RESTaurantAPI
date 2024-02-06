@@ -23,6 +23,40 @@ namespace RESTaurantAPI.Controllers
             this.orderService = orederService;
         }
 
+        [HttpGet("GetAll")]
+        public async Task<ActionResult<List<OrderDto>>> GetAll(
+            CancellationToken cancellationToken, int? skip = null, int? limit = null)
+        {
+            var orders = await this.orderService.GetAll(cancellationToken);
+            var ordersDto = this._mapper.Map<List<OrderDto>>(orders);
+
+            if (skip.HasValue)
+            {
+                ordersDto = ordersDto.Skip(skip.Value).ToList();
+            }
+
+            if (limit.HasValue)
+            {
+                ordersDto = ordersDto.Take(limit.Value).ToList();
+            }
+
+            return Ok(ordersDto);
+        }
+
+
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<OrderDto>> GetById(int id, CancellationToken cancellationToken)
+        {
+            var order = await orderService.GetById(id, cancellationToken);
+            var orderDto = this._mapper.Map<TableDto>(order);
+            if (orderDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(orderDto);
+        }
+
         [HttpPost("AddOrder")]
         public async Task<ActionResult<OrderDto>> AddOrder(int quantity, int tableId, int dishId, CancellationToken cancellationToken)
         {

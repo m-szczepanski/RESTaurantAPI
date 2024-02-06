@@ -20,6 +20,21 @@ namespace RESTaurantAPI.Services
             this._dbContext = dbContext;
         }
 
+        public async Task<List<Order>> GetAll(CancellationToken cancellationToken, int? skip = null, int? limit = null)
+        {
+            var orders = await _dbContext.Orders
+                .ToListAsync(cancellationToken);
+
+            return orders == null ? throw new ApplicationException("No orders are in the database right now.") : orders;
+        }
+
+        public async Task<Order> GetById(int id, CancellationToken cancellationToken)
+        {
+            var order = await _dbContext.Orders.Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+
+            return order == null ? throw new ApplicationException("No order found") : order;
+        }
+
         public async Task<Order> AddOrder(int quantity, int tableId, int dishId, CancellationToken cancellationToken)
         {
 
