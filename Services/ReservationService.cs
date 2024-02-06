@@ -42,7 +42,7 @@ namespace RESTaurantAPI.Services
                 : reservations;
         }
 
-        public async Task<List<Reservation>> GetReservationsByDateAndHour(DateTime date, TimeOnly hour,
+        /*public async Task<List<Reservation>> GetReservationsByDateAndHour(DateTime date, TimeOnly hour,
             CancellationToken cancellationToken)
         {
             var reservations = await _dbContext.Reservations.Where(x => x.Date == date && x.Hour == hour)
@@ -51,7 +51,7 @@ namespace RESTaurantAPI.Services
             return reservations == null
                 ? throw new ApplicationException($"No reservations were found for {date}, {hour}.")
                 : reservations;
-        }
+        }*/
 
         /*public async Task<List<Dish>> GetReservationByTableId(int tableId, CancellationToken cancellationToken)
         {
@@ -87,7 +87,7 @@ namespace RESTaurantAPI.Services
             return newReservation;
         }
 
-        public async Task UpdateReservation(int reservationId, DateTime date, TimeOnly hour, int seatsNumber,
+        /*public async Task UpdateReservation(int reservationId, DateTime date, TimeOnly hour, int seatsNumber,
             CancellationToken cancellationToken)
         {
             Reservation reservation =
@@ -98,7 +98,7 @@ namespace RESTaurantAPI.Services
             reservation.NumberOfSeats = seatsNumber;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
-        }
+        }*/
 
         public async Task CancelReservation(int reservationId, CancellationToken cancellationToken)
         {
