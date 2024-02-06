@@ -9,7 +9,6 @@ using RESTaurantAPI.Services;
 
 namespace RESTaurantAPI.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
 

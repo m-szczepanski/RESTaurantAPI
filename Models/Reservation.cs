@@ -12,7 +12,7 @@ namespace RESTaurantAPI.Models
         public DateTime Date { get; set; }
 
         [Required]
-        public TimeOnly Hour { get; set; }
+        public DateTime Hour { get; set; }
 
         public int NumberOfSeats { get; set; }
         public virtual Table Table { get; set; }

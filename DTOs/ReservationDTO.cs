@@ -11,7 +11,7 @@ namespace RESTaurantAPI.DTOs
 
         public DateOnly Date { get; set; }
 
-        public DateTime Hour { get; set; }
+        public DateOnly Hour { get; set; }
 
         public int NumberOfSeats { get; set; }
 
