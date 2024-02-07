@@ -76,6 +76,9 @@ namespace RESTaurantAPI.Services
             Table table = await _dbContext.Tables.GetTableById(tableId, cancellationToken);
             Dish dish = await _dbContext.Dishes.GetDishById(dishId, cancellationToken);
 
+            //var dishPrice = dish.Price;
+            var orderPrice = dish.Price * quantity;
+
             var newOrder = new Order
             {
                 OrderTime = DateTime.Now,
@@ -83,6 +86,7 @@ namespace RESTaurantAPI.Services
                 Status = "in preparation",
                 Dish = dish,
                 Table = table,
+                OrderPrice = orderPrice
             };
 
             _dbContext.Orders.Add(newOrder);
