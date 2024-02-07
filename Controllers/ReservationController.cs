@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RESTaurantAPI.DTOs;
+using RESTaurantAPI.HelpingServices;
 using RESTaurantAPI.Models;
 using RESTaurantAPI.Services;
 
@@ -75,6 +76,19 @@ namespace RESTaurantAPI.Controllers
         public async Task<ActionResult<ReservationDto>> GetByTable(int id, CancellationToken cancellationToken)
         {
             var reservations = await this._reservationService.GetByTable(id, cancellationToken);
+            var reservationsDto = this._mapper.Map<ReservationDto>(reservations);
+            if (reservationsDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservationsDto);
+        }
+
+        [HttpGet("GetByTable/{id}/{date}")]
+        public async Task<ActionResult<ReservationDto>> GetByTableAndDate(int id, DateTime date, CancellationToken cancellationToken)
+        {
+            var reservations = await this._reservationService.GetByTableAndDate(id, date, cancellationToken);
             var reservationsDto = this._mapper.Map<ReservationDto>(reservations);
             if (reservationsDto == null)
             {

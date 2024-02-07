@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RESTaurantAPI.Models;
 using RESTaurantAPI.HelpingServices;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace RESTaurantAPI.Services
@@ -45,12 +46,25 @@ namespace RESTaurantAPI.Services
 
         public async Task<Reservation> GetByTable(int id, CancellationToken cancellationToken)
         {
-            //var table = TableHelpers.GetTableById(_dbContext.Tables, id, cancellationToken);
+            await TableHelpers.GetTableById(_dbContext.Tables, id, cancellationToken);
+
             var reservation = await this._dbContext.Reservations.Where(x => x.Table.Id == id)
                 .Include(x=>x.Table)
                 .FirstOrDefaultAsync(cancellationToken);
 
             return reservation == null ? throw new ApplicationException($"No reservations were found this table.") : reservation;
+        }
+
+        public async Task<Reservation> GetByTableAndDate(int id, DateTime date, CancellationToken cancellationToken)
+        {
+            await TableHelpers.GetTableById(_dbContext.Tables, id, cancellationToken);
+
+            var reservation = await this._dbContext.Reservations
+                .Where(x => x.Table.Id == id && x.Date.Date == date.Date)
+                .Include(x => x.Table)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return reservation ?? throw new ApplicationException($"No reservations were found for this table and date.");
         }
 
         public async Task<Reservation> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
