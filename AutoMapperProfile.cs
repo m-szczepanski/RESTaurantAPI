@@ -8,44 +8,40 @@ namespace RESTaurantAPI
     {
         public AutoMapperProfile()
         {
-            // Table
+            // Table to TableDTO
             CreateMap<Table, TableDto>();
+            // DTO to Table
             CreateMap<TableDto, Table>();
 
-            // Employee
+            // Employee to EmployeeDTO
             CreateMap<Employee, EmployeeDto>();
+            //  EmployeeDTO to Employee
             CreateMap<EmployeeDto, Employee>();
 
             // Dish
             CreateMap<Dish, DishDto>();
             CreateMap<DishDto, Dish>();
 
-            // Reservation
+            // Reservation to Reservation
             CreateMap<Reservation, ReservationDto>()
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.Table.Id));
+            // ReservationDTO to Reservation
             CreateMap<ReservationDto, Reservation>()
-                .ForMember(dest => dest.Table, opt => opt.MapFrom(src => new Table() { Id = src.TableId }));
+                .ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.TableId));
 
-            //Order
+            //Order to OrderDTO
             CreateMap<Order, OrderDto>()
                 .ForMember(dest => dest.DishId, opt => opt.MapFrom(src => src.Dish.Id))
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.Table.Id));
-                //.ForMember(dest => dest.DishId, opt => opt.MapFrom(src => src.Dish.Id))
-                //.ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.Table.Id));
-            // OrderDto to Order
+            // OrderDTO to Order
             CreateMap<OrderDto, Order>()
                 .ForMember(dest => dest.Dish, opt => opt.MapFrom(src => src.DishId))
                 .ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.TableId));
-                //.ForMember(dest => dest.Dish, opt => opt.MapFrom(src => new Dish() { Id = src.DishId }))
-                //.ForMember(dest => dest.Table, opt => opt.MapFrom(src => new Table() { Id = src.TableId }));
 
-            // Menu
-            //CreateMap<Menu, MenuDto>()
-            //.ForMember(dest => dest.DishName, opt => opt.MapFrom(src => src.Dish.DishName));
-            //CreateMap<MenuDto, Menu>()
-            //.ForMember(dest => dest.Dish, opt => opt.MapFrom(src => new Dish() { DishName = src.DishName }));
+            //Menu to MenuDTO
             CreateMap<Menu, MenuDto>()
                 .ForMember(dest => dest.Dishes, opt => opt.MapFrom(src => src.Dishes));
+            //MenuDTO to Menu
             CreateMap<MenuDto, Menu>()
                 .ForMember(dest => dest.Dishes, opt => opt.MapFrom(src => src.Dishes));
 

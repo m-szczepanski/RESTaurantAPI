@@ -58,6 +58,32 @@ namespace RESTaurantAPI.Controllers
             return Ok(reservationDto);
         }
 
+        [HttpGet("GetByDate/{date}")]
+        public async Task<ActionResult<ReservationDto>> GetByDate(DateTime date, CancellationToken cancellationToken)
+        {
+            var reservation = await this._reservationService.GetByDate(date, cancellationToken);
+            var reservationDto = this._mapper.Map<ReservationDto>(reservation);
+            if (reservationDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservationDto);
+        }
+
+        [HttpGet("GetByTable/{id}")]
+        public async Task<ActionResult<ReservationDto>> GetByTable(int id, CancellationToken cancellationToken)
+        {
+            var reservations = await this._reservationService.GetByTable(id, cancellationToken);
+            var reservationsDto = this._mapper.Map<ReservationDto>(reservations);
+            if (reservationsDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservationsDto);
+        }
+
         [HttpPost("AddReservation")]
         public async Task<ActionResult<ReservationDto>> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
         {

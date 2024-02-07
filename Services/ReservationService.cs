@@ -35,13 +35,22 @@ namespace RESTaurantAPI.Services
             return reservation == null ? throw new ApplicationException("No reservation was found") : reservation;
         }
 
-        public async Task<List<Reservation>> GetReservationsByDate(DateTime date, CancellationToken cancellationToken)
+        public async Task<Reservation> GetByDate(DateTime date, CancellationToken cancellationToken)
         {
-            var reservations = await this._dbContext.Reservations.Where(x => x.Date == date).ToListAsync(cancellationToken);
+            var reservation = await this._dbContext.Reservations.Where(x => x.Date == date)
+                .Include(x=>x.Table).FirstOrDefaultAsync(cancellationToken);
 
-            return reservations == null
-                ? throw new ApplicationException($"No reservations were found for {date}.")
-                : reservations;
+            return reservation == null ? throw new ApplicationException($"No reservations were found for {date}.") : reservation;
+        }
+
+        public async Task<Reservation> GetByTable(int id, CancellationToken cancellationToken)
+        {
+            //var table = TableHelpers.GetTableById(_dbContext.Tables, id, cancellationToken);
+            var reservation = await this._dbContext.Reservations.Where(x => x.Table.Id == id)
+                .Include(x=>x.Table)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return reservation == null ? throw new ApplicationException($"No reservations were found this table.") : reservation;
         }
 
         public async Task<Reservation> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
