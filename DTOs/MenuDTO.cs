@@ -7,14 +7,9 @@ namespace RESTaurantAPI.DTOs
     {
         [Key]
         public int Id { get; set; }
-
         [Required]
         public List<Dish> Dishes { get; set; }
-        public string Quisine { get; set; }
-        [Required]
-        public string[] Ingredients { get; set; }
-        public bool Vegetarian { get; set; }
-        public bool Vegan { get; set; }
-        public bool Spicy { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }
