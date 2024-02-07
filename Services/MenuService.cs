@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using RESTaurantAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using RESTaurantAPI.Models;
-using RESTaurantAPI.HelpingServices;
 
 
 namespace RESTaurantAPI.Services
@@ -22,7 +21,7 @@ namespace RESTaurantAPI.Services
 
         public async Task<List<Menu>> GetAll(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var menus = await _dbContext.Menus
+            var menus = await this._dbContext.Menus
                 .Include(x=>x.Dishes)
                 .ToListAsync(cancellationToken);
 
@@ -31,21 +30,21 @@ namespace RESTaurantAPI.Services
 
         public async Task<Menu> GetById(int id, CancellationToken cancellationToken)
         {
-            var menu = await _dbContext.Menus.Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+            var menu = await this._dbContext.Menus.Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
 
             return menu == null ? throw new ApplicationException("No menu was found") : menu;
         }
 
         public async Task<Menu> GetByStartDate(DateTime startDate, CancellationToken cancellationToken)
         {
-            var menu = await _dbContext.Menus.Where(x => x.StartDate == startDate).FirstOrDefaultAsync(cancellationToken);
+            var menu = await this._dbContext.Menus.Where(x => x.StartDate == startDate).FirstOrDefaultAsync(cancellationToken);
 
             return menu == null ? throw new ApplicationException("No menu found") : menu;
         }
 
         public async Task<List<Menu>> GetBetweenDates(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
         {
-            var menus = await _dbContext.Menus.Where(t => t.StartDate <= startDate && t.EndDate >= endDate)
+            var menus = await this._dbContext.Menus.Where(t => t.StartDate <= startDate && t.EndDate >= endDate)
                 .Include(x=>x.Dishes).ToListAsync(cancellationToken);
 
             return menus == null ? throw new ApplicationException("No menu found") : menus;
@@ -54,7 +53,7 @@ namespace RESTaurantAPI.Services
         public async Task<Menu> GetCurrentMenu(CancellationToken cancellationToken)
         {
             var todayDate = DateTime.Today;
-            var menu = await _dbContext.Menus.Where(t => t.StartDate <= todayDate && t.EndDate >= todayDate)
+            var menu = await this._dbContext.Menus.Where(t => t.StartDate <= todayDate && t.EndDate >= todayDate)
                 .Include(x=>x.Dishes).FirstOrDefaultAsync(cancellationToken);
 
             return menu == null ? throw new ApplicationException("There's no current menu in the database.") : menu;
@@ -64,7 +63,7 @@ namespace RESTaurantAPI.Services
         {
             DateTime startDate = DateTime.Parse(startDateString);
             DateTime endDate = DateTime.Parse(endDateString);
-            List<Dish> dishes = await _dbContext.Dishes.Where(d => dishIds.Contains(d.Id)).ToListAsync();
+            List<Dish> dishes = await this._dbContext.Dishes.Where(d => dishIds.Contains(d.Id)).ToListAsync();
 
             var newMenu = new Menu
             {
@@ -73,41 +72,36 @@ namespace RESTaurantAPI.Services
                 EndDate = endDate
             };
 
-            _dbContext.Menus.Add(newMenu);
-            await _dbContext.SaveChangesAsync();
+            this._dbContext.Menus.Add(newMenu);
+            await this._dbContext.SaveChangesAsync();
 
             return newMenu;
         }
 
         public async Task UpdateStartDate(int id, DateTime startDate, CancellationToken cancellationToken)
         {
-            Menu menu = await _dbContext.Menus.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+            Menu menu = await this._dbContext.Menus.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
             menu.StartDate = startDate;
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task UpdateEndDate(int id, DateTime endDate, CancellationToken cancellationToken)
         {
-            Menu menu = await _dbContext.Menus.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+            Menu menu = await this._dbContext.Menus.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
             menu.EndDate = endDate;
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteMenu(int id, CancellationToken cancellationToken)
         {
-            var menu = await _dbContext.Menus.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var menu = await this._dbContext.Menus.FirstOrDefaultAsync(x => x.Id == id, cancellationToken) ?? throw new ApplicationException("Menu with that id doesn't exists.");
 
-            if (menu == null)
-            {
-                throw new ApplicationException("Menu with that id doesn't exists.");
-            }
-
-            _dbContext.Menus.Remove(menu);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            this._dbContext.Menus.Remove(menu);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

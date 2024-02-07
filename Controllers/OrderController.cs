@@ -17,10 +17,10 @@ namespace RESTaurantAPI.Controllers
         private readonly IMapper _mapper;
         private readonly OrderService _orderService;
 
-        public OrderController(OrderService orederService, IMapper _mapper)
+        public OrderController(OrderService orderService, IMapper _mapper)
         {
             this._mapper = _mapper;
-            this._orderService = orederService;
+            this._orderService = orderService;
         }
 
         [HttpGet("GetAll")]
@@ -129,7 +129,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("MarkAsDelivered/{id}")]
         public async Task<ActionResult> MarkAsDelivered(int id, CancellationToken cancellationToken)
         {
-            await _orderService.MarkAsDelivered(id, cancellationToken);
+            await this._orderService.MarkAsDelivered(id, cancellationToken);
 
             return Ok("The order has been delivered.");
         }

@@ -117,7 +117,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("UpdateEndDate/{id}")]
         public async Task<ActionResult> UpdateEndDate(int id, DateTime endDate, CancellationToken cancellationToken)
         {
-            await this.UpdateStartDate(id, endDate, cancellationToken);
+            await this._menuService.UpdateEndDate(id, endDate, cancellationToken);
 
             return Ok("End date has been modified.");
         }

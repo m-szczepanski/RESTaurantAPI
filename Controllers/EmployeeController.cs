@@ -17,19 +17,19 @@ namespace RESTaurantAPI.Controllers
     public class EmployeeController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly EmployeeService employeeService;
+        private readonly EmployeeService _employeeService;
 
         public EmployeeController(EmployeeService employeeService, IMapper _mapper)
         {
             this._mapper = _mapper;
-            this.employeeService = employeeService;
+            this._employeeService = employeeService;
         }
 
         [HttpGet("GetAllEmployees")]
         public async Task<ActionResult<List<EmployeeDto>>> GetAllEmployees(CancellationToken cancellationToken,
             int? skip = null, int? limit = null)
         {
-            var employees = await this.employeeService.GetAllEmployees(cancellationToken);
+            var employees = await this._employeeService.GetAllEmployees(cancellationToken);
             var employeesDto = this._mapper.Map<List<EmployeeDto>>(employees);
 
             if (skip.HasValue)
@@ -49,7 +49,7 @@ namespace RESTaurantAPI.Controllers
         public async Task<ActionResult<EmployeeDto>> GetEmployeeById(int employeeId,
             CancellationToken cancellationToken)
         {
-            var employee = await employeeService.GetEmployeeById(employeeId, cancellationToken);
+            var employee = await this._employeeService.GetEmployeeById(employeeId, cancellationToken);
             var employeeDto = this._mapper.Map<EmployeeDto>(employee);
             if (employeeDto == null)
             {
@@ -62,7 +62,7 @@ namespace RESTaurantAPI.Controllers
         [HttpGet("GetEmployeesByRole/{role}")]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesByRole(string role, CancellationToken cancellationToken)
         {
-            var employees = await employeeService.GetEmployeesByRole(role, cancellationToken);
+            var employees = await this._employeeService.GetEmployeesByRole(role, cancellationToken);
             var employeesDto = this._mapper.Map<List<EmployeeDto>>(employees);
 
             if (employeesDto == null || employeesDto.Count == 0)
@@ -76,7 +76,7 @@ namespace RESTaurantAPI.Controllers
         [HttpGet("GetEmployeesByLastName/{lastName}")]
         public async Task<ActionResult<List<EmployeeDto>>> GetEmployeesByLastName(string lastName, CancellationToken cancellationToken)
         {
-            var employees = await employeeService.GetEmployeesByLastName(lastName, cancellationToken);
+            var employees = await this._employeeService.GetEmployeesByLastName(lastName, cancellationToken);
             var employeesDto = this._mapper.Map<List<EmployeeDto>>(employees);
 
             if (employeesDto == null || employeesDto.Count == 0)
@@ -91,8 +91,7 @@ namespace RESTaurantAPI.Controllers
         public async Task<ActionResult<EmployeeDto>> AddEmployee(string firstName, string lastName, string role,
             string email, string phoneNumber, CancellationToken cancellationToken)
         {
-            var employee =
-                await this.employeeService.AddEmployee(firstName, lastName, role, email, phoneNumber,
+            var employee = await this._employeeService.AddEmployee(firstName, lastName, role, email, phoneNumber,
                     cancellationToken);
             var employeeDto = this._mapper.Map<EmployeeDto>(employee);
 
@@ -104,7 +103,7 @@ namespace RESTaurantAPI.Controllers
             string email, string phoneNumber,
             CancellationToken cancellationToken)
         {
-            await employeeService.UpdateEmployee(id, firstName, lastName, role, email, phoneNumber, cancellationToken);
+            await this._employeeService.UpdateEmployee(id, firstName, lastName, role, email, phoneNumber, cancellationToken);
 
             return Ok("Employee updated successfully.");
         }
@@ -112,7 +111,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("UpdateRole/{id}")]
         public async Task<ActionResult> UpdateRole(int id, string role, CancellationToken cancellationToken)
         {
-            await employeeService.UpdateRole(id, role, cancellationToken);
+            await this._employeeService.UpdateRole(id, role, cancellationToken);
 
             return Ok("Employee's role updated successfully.");
         }
@@ -120,7 +119,7 @@ namespace RESTaurantAPI.Controllers
         [HttpDelete("Delete/{id}")]
         public async Task<ActionResult> DeleteEmployee(int id, CancellationToken cancellationToken)
         {
-            await this.employeeService.DeleteEmployee(id, cancellationToken);
+            await this._employeeService.DeleteEmployee(id, cancellationToken);
 
             return Ok("Employee has been deleted successfully");
         }
