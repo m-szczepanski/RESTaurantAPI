@@ -76,7 +76,6 @@ namespace RESTaurantAPI.Services
             var newReservation = new Reservation
             {
                 Date = date,
-                Hour = hour,
                 NumberOfSeats = seatsNumber,
                 Table = table.Result
             };
