@@ -46,15 +46,22 @@ namespace RESTaurantAPI.Controllers
 
 
 
-        /*[HttpPost("AddReservation")]
-        public async Task<ActionResult<ReservationDto>> AddReservation(DateTime date, string hour, int seatsNumber,
-            CancellationToken cancellationToken)
+        [HttpPost("AddReservation")]
+        public async Task<ActionResult<ReservationDto>> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
         {
-            var reservation = await this.reservationService.AddReservation(date, hour, seatsNumber, cancellationToken);
-            var reservationDto = this._mapper.Map<TableDto>(reservation);
+            var reservation = await this._reservationService.AddReservation(date, seatsNumber, cancellationToken);
+            var reservationDto = this._mapper.Map<ReservationDto>(reservation);
 
             return Ok(reservationDto);
-        }*/
+        }
+
+        [HttpDelete("Cancel/{id}")]
+        public async Task<ActionResult> CancelReservation(int id, CancellationToken cancellationToken)
+        {
+            await this._reservationService.CancelReservation(id, cancellationToken);
+
+            return Ok("Reservation has been cancelled successfully");
+        }
 
     }
 }

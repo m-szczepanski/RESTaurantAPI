@@ -63,15 +63,10 @@ namespace RESTaurantAPI.Services
 
         /*public async Task<List<Dish>> GetReservationByTableIdAndDate(int tableId, DateTime date, CancellationToken cancellationToken)*/
 
-        public async Task<Reservation> AddReservation(DateTime date, DateTime hour, int seatsNumber,
-            CancellationToken cancellationToken)
+        public async Task<Reservation> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
         {
-
-            var dateToday = DateTime.Today;
+            ReservationHelpers.ValidateDay(date);
             var table = TableHelpers.GetTableBySeats(_dbContext.Tables, seatsNumber, cancellationToken);
-
-            if (date == dateToday)
-                throw new ApplicationException("Cannot place reservation on the same day.");
 
             var newReservation = new Reservation
             {
@@ -86,25 +81,12 @@ namespace RESTaurantAPI.Services
             return newReservation;
         }
 
-        /*public async Task UpdateReservation(int reservationId, DateTime date, TimeOnly hour, int seatsNumber,
-            CancellationToken cancellationToken)
-        {
-            Reservation reservation =
-                await _dbContext.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId, cancellationToken);
-
-            reservation.Date = date;
-            reservation.Hour = hour;
-            reservation.NumberOfSeats = seatsNumber;
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }*/
-
         public async Task CancelReservation(int reservationId, CancellationToken cancellationToken)
         {
             var reservation =
                 await this._dbContext.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId, cancellationToken);
 
-            if (reservation != null)
+            if (reservation == null)
                 throw new ApplicationException("Reservation with that id doesn't exist.");
 
             _dbContext.Reservations.Remove(reservation);
