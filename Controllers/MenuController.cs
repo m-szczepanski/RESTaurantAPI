@@ -45,9 +45,9 @@ namespace RESTaurantAPI.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult<MenuDto>> AddMenu(List<int> dishIds, string dateString)
+        public async Task<ActionResult<MenuDto>> AddMenu(List<int> dishIds, string startDateString, string endDateString)
         {
-            var menu = await _menuService.AddMenu(dishIds, dateString);
+            var menu = await _menuService.AddMenu(dishIds, startDateString, endDateString);
 
             var menuDto = _mapper.Map<MenuDto>(menu);
 

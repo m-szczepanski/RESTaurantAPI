@@ -29,15 +29,17 @@ namespace RESTaurantAPI.Services
             return menus == null ? throw new ApplicationException("No orders are in the database right now.") : menus;
         }
 
-        public async Task<Menu> AddMenu(List<int> dishIds, string dateString)
+        public async Task<Menu> AddMenu(List<int> dishIds, string startDateString, string endDateString)
         {
-            DateOnly date = DateOnly.Parse(dateString);
+            DateOnly startDate = DateOnly.Parse(startDateString);
+            DateOnly endDate = DateOnly.Parse(endDateString);
             List<Dish> dishes = await _dbContext.Dishes.Where(d => dishIds.Contains(d.Id)).ToListAsync();
 
             var newMenu = new Menu
             {
                 Dishes = dishes,
-                Date = date
+                StartDate = startDate,
+                EndDate = endDate
             };
 
             _dbContext.Menus.Add(newMenu);
