@@ -94,7 +94,7 @@ namespace RESTaurantAPI.Controllers
 
             if (dishDto == null || dishDto.Count == 0)
             {
-                return NotFound();
+                return NotFound("No vegan dishes found in the database.");
             }
 
             return Ok(dishDto);

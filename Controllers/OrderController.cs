@@ -15,19 +15,19 @@ namespace RESTaurantAPI.Controllers
     public class OrderController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly OrderService orderService;
+        private readonly OrderService _orderService;
 
         public OrderController(OrderService orederService, IMapper _mapper)
         {
             this._mapper = _mapper;
-            this.orderService = orederService;
+            this._orderService = orederService;
         }
 
         [HttpGet("GetAll")]
         public async Task<ActionResult<List<OrderDto>>> GetAll(
             CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var orders = await this.orderService.GetAll(cancellationToken);
+            var orders = await this._orderService.GetAll(cancellationToken);
             var ordersDto = this._mapper.Map<List<OrderDto>>(orders);
 
             if (skip.HasValue)
@@ -47,8 +47,8 @@ namespace RESTaurantAPI.Controllers
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<OrderDto>> GetById(int id, CancellationToken cancellationToken)
         {
-            var order = await orderService.GetById(id, cancellationToken);
-            var orderDto = this._mapper.Map<TableDto>(order);
+            var order = await _orderService.GetById(id, cancellationToken);
+            var orderDto = this._mapper.Map<OrderDto>(order);
             if (orderDto == null)
             {
                 return NotFound();
@@ -61,7 +61,7 @@ namespace RESTaurantAPI.Controllers
         public async Task<ActionResult<List<OrderDto>>> GetInProgressOrders(
             CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var orders = await this.orderService.GetInProgressOrders(cancellationToken);
+            var orders = await this._orderService.GetInPreparationOrders(cancellationToken);
             var ordersDto = this._mapper.Map<List<OrderDto>>(orders);
 
             if (skip.HasValue)
@@ -81,7 +81,7 @@ namespace RESTaurantAPI.Controllers
         public async Task<ActionResult<List<OrderDto>>> GetDeliveredOrders(
             CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var orders = await this.orderService.GetDeliveredOrders(cancellationToken);
+            var orders = await this._orderService.GetDeliveredOrders(cancellationToken);
             var ordersDto = this._mapper.Map<List<OrderDto>>(orders);
 
             if (skip.HasValue)
@@ -97,11 +97,11 @@ namespace RESTaurantAPI.Controllers
             return Ok(ordersDto);
         }
 
-        [HttpGet("GetTablesOrders")]
+        [HttpGet("GetTablesOrders/{tableId}")]
         public async Task<ActionResult<List<OrderDto>>> GetTablesOrders(
             int tableId, CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var orders = await this.orderService.GetAllTablesOrders(tableId, cancellationToken);
+            var orders = await this._orderService.GetAllTablesOrders(tableId, cancellationToken);
             var ordersDto = this._mapper.Map<List<OrderDto>>(orders);
 
             if (skip.HasValue)
@@ -120,7 +120,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPost("AddOrder")]
         public async Task<ActionResult<OrderDto>> AddOrder(int quantity, int tableId, int dishId, CancellationToken cancellationToken)
         {
-            var order = await this.orderService.AddOrder(quantity, tableId, dishId, cancellationToken);
+            var order = await this._orderService.AddOrder(quantity, tableId, dishId, cancellationToken);
             var orderDto = this._mapper.Map<OrderDto>(order);
 
             return Ok(orderDto);
@@ -129,7 +129,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("MarkAsDelivered/{id}")]
         public async Task<ActionResult> MarkAsDelivered(int id, CancellationToken cancellationToken)
         {
-            await orderService.MarkAsDelivered(id, cancellationToken);
+            await _orderService.MarkAsDelivered(id, cancellationToken);
 
             return Ok("The order has been delivered.");
         }
@@ -137,7 +137,7 @@ namespace RESTaurantAPI.Controllers
         [HttpDelete("Delete{id}")]
         public async Task<ActionResult> DeleteOrder(int id, CancellationToken cancellationToken)
         {
-            await this.orderService.DeleteOrder(id, cancellationToken);
+            await this._orderService.DeleteOrder(id, cancellationToken);
 
             return Ok("Order has been deleted.");
         }

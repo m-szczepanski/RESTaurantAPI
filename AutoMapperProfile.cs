@@ -30,12 +30,14 @@ namespace RESTaurantAPI
             CreateMap<Order, OrderDto>()
                 .ForMember(dest => dest.DishId, opt => opt.MapFrom(src => src.Dish.Id))
                 .ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.Table.Id));
+                //.ForMember(dest => dest.DishId, opt => opt.MapFrom(src => src.Dish.Id))
+                //.ForMember(dest => dest.TableId, opt => opt.MapFrom(src => src.Table.Id));
             // OrderDto to Order
             CreateMap<OrderDto, Order>()
                 .ForMember(dest => dest.Dish, opt => opt.MapFrom(src => src.DishId))
                 .ForMember(dest => dest.Table, opt => opt.MapFrom(src => src.TableId));
-
-
+                //.ForMember(dest => dest.Dish, opt => opt.MapFrom(src => new Dish() { Id = src.DishId }))
+                //.ForMember(dest => dest.Table, opt => opt.MapFrom(src => new Table() { Id = src.TableId }));
 
             // Menu
             //CreateMap<Menu, MenuDto>()
