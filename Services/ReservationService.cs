@@ -18,7 +18,8 @@ namespace RESTaurantAPI.Services
         public async Task<List<Reservation>> GetAllReservations(CancellationToken cancellationToken, int? skip = null,
             int? limit = null)
         {
-            var reservations = await this._dbContext.Reservations.ToListAsync(cancellationToken);
+            var reservations = await this._dbContext.Reservations
+                .Include(x=>x.Table).ToListAsync(cancellationToken);
 
             return reservations == null
                 ? throw new ApplicationException("No reservations are in the database right now.")
@@ -41,27 +42,6 @@ namespace RESTaurantAPI.Services
                 ? throw new ApplicationException($"No reservations were found for {date}.")
                 : reservations;
         }
-
-        /*public async Task<List<Reservation>> GetReservationsByDateAndHour(DateTime date, TimeOnly hour,
-            CancellationToken cancellationToken)
-        {
-            var reservations = await _dbContext.Reservations.Where(x => x.Date == date && x.Hour == hour)
-                .ToListAsync(cancellationToken);
-
-            return reservations == null
-                ? throw new ApplicationException($"No reservations were found for {date}, {hour}.")
-                : reservations;
-        }*/
-
-        /*public async Task<List<Dish>> GetReservationByTableId(int tableId, CancellationToken cancellationToken)
-        {
-            var table = _dbContext.Tables.GetSpecyficTableById(tableId, cancellationToken);
-            var reservations = await _dbContext.Reservations.Where(x => x.Table.Id == table.Id).ToListAsync(cancellationToken);
-
-            return reservations == null ? throw new ApplicationException("No dishes with that cuisine were found") : reservations;
-        }*/
-
-        /*public async Task<List<Dish>> GetReservationByTableIdAndDate(int tableId, DateTime date, CancellationToken cancellationToken)*/
 
         public async Task<Reservation> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
         {
