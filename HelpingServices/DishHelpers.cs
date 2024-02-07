@@ -4,7 +4,7 @@ using RESTaurantAPI.Models;
 
 namespace RESTaurantAPI.HelpingServices
 {
-    public static class GetSpecyficDish
+    public static class DishHelpers
     {
         public static async Task<Dish> GetDishById(this DbSet<Dish> dishes, int id, CancellationToken cancellationToken)
         {

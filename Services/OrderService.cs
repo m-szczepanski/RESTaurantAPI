@@ -97,7 +97,7 @@ namespace RESTaurantAPI.Services
 
         public async Task MarkAsDelivered(int orderId, CancellationToken cancellationToken)
         {
-            Order order = await this._dbContext.Orders.FirstOrDefaultAsync(s => s.Id == orderId, cancellationToken);
+            Order order = await _dbContext.Orders.FirstOrDefaultAsync(s => s.Id == orderId, cancellationToken);
 
             order.Status = "delivered";
 
