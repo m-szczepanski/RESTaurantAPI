@@ -26,9 +26,10 @@ namespace RESTaurantAPI.Services
                 : reservations;
         }
 
-        public async Task<Reservation> GetReservationById(int reservationId, CancellationToken cancellationToken)
+        public async Task<Reservation> GetById(int reservationId, CancellationToken cancellationToken)
         {
             var reservation = await this._dbContext.Reservations.Where(x => x.Id == reservationId)
+                .Include(x=>x.Table)
                 .FirstOrDefaultAsync(cancellationToken);
 
             return reservation == null ? throw new ApplicationException("No reservation was found") : reservation;

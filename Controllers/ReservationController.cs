@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RESTaurantAPI.DTOs;
+using RESTaurantAPI.Models;
 using RESTaurantAPI.Services;
 
 namespace RESTaurantAPI.Controllers
@@ -44,7 +45,18 @@ namespace RESTaurantAPI.Controllers
             return Ok(reservationsDto);
         }
 
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<ReservationDto>> GetById(int id, CancellationToken cancellationToken)
+        {
+            var reservation = await this._reservationService.GetById(id, cancellationToken);
+            var reservationDto = this._mapper.Map<ReservationDto>(reservation);
+            if (reservationDto == null)
+            {
+                return NotFound();
+            }
 
+            return Ok(reservationDto);
+        }
 
         [HttpPost("AddReservation")]
         public async Task<ActionResult<ReservationDto>> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
