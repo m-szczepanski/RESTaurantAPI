@@ -47,5 +47,36 @@ namespace RESTaurantAPI.Services
 
             return newMenu;
         }
+
+        public async Task UpdateStartDate(int id, DateTime startDate, CancellationToken cancellationToken)
+        {
+            Menu menu = await _dbContext.Menus.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+
+            menu.StartDate = startDate;
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateEndDate(int id, DateTime endDate, CancellationToken cancellationToken)
+        {
+            Menu menu = await _dbContext.Menus.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+
+            menu.EndDate = endDate;
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task DeleteMenu(int id, CancellationToken cancellationToken)
+        {
+            var menu = await _dbContext.Menus.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+            if (menu == null)
+            {
+                throw new ApplicationException("Menu with that id doesn't exists.");
+            }
+
+            _dbContext.Menus.Remove(menu);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

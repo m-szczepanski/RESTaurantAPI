@@ -53,5 +53,29 @@ namespace RESTaurantAPI.Controllers
 
             return Ok(menuDto);
         }
+
+        [HttpPut("UpdateStartDate/{id}")]
+        public async Task<ActionResult> UpdateStartDate(int id, DateTime startDate, CancellationToken cancellationToken)
+        {
+            await _menuService.UpdateStartDate(id, startDate, cancellationToken);
+
+            return Ok("Start date has been modified.");
+        }
+
+        [HttpPut("UpdateEndDate/{id}")]
+        public async Task<ActionResult> UpdateEndDate(int id, DateTime endDate, CancellationToken cancellationToken)
+        {
+            await _menuService.UpdateStartDate(id, endDate, cancellationToken);
+
+            return Ok("End date has been modified.");
+        }
+
+        [HttpDelete("Delete{id}")]
+        public async Task<ActionResult> DeleteMenu(int id, CancellationToken cancellationToken)
+        {
+            await this._menuService.DeleteMenu(id, cancellationToken);
+
+            return Ok("Menu has been deleted.");
+        }
     }
 }
