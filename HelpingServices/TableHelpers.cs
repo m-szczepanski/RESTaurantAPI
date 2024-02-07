@@ -11,7 +11,7 @@ namespace RESTaurantAPI.HelpingServices
         {
             Table table = await tables.FirstOrDefaultAsync(r => r.Id == id , cancellationToken);
 
-            return table;
+            return table == null ? throw new ApplicationException($"Table with id {id} doesn't exist.") : table;
         }
 
         public static async Task<Table> GetTableBySeats(this DbSet<Table> tables, int seats, CancellationToken cancellationToken)
