@@ -31,8 +31,8 @@ namespace RESTaurantAPI.Services
 
         public async Task<Menu> AddMenu(List<int> dishIds, string startDateString, string endDateString)
         {
-            DateOnly startDate = DateOnly.Parse(startDateString);
-            DateOnly endDate = DateOnly.Parse(endDateString);
+            DateTime startDate = DateTime.Parse(startDateString);
+            DateTime endDate = DateTime.Parse(endDateString);
             List<Dish> dishes = await _dbContext.Dishes.Where(d => dishIds.Contains(d.Id)).ToListAsync();
 
             var newMenu = new Menu
