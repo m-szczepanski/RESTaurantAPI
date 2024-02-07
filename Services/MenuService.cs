@@ -20,6 +20,15 @@ namespace RESTaurantAPI.Services
             this._dbContext = dbContext;
         }
 
+        public async Task<List<Menu>> GetAll(CancellationToken cancellationToken, int? skip = null, int? limit = null)
+        {
+            var menus = await _dbContext.Menus
+                .Include(x=>x.Dishes)
+                .ToListAsync(cancellationToken);
+
+            return menus == null ? throw new ApplicationException("No orders are in the database right now.") : menus;
+        }
+
         public async Task<Menu> AddMenu(List<int> dishIds, string dateString)
         {
             DateOnly date = DateOnly.Parse(dateString);

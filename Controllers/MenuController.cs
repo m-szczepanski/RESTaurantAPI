@@ -24,6 +24,26 @@ namespace RESTaurantAPI.Controllers
             this._menuService = menuService;
         }
 
+        [HttpGet("GetAll")]
+        public async Task<ActionResult<List<MenuDto>>> GetAll(
+            CancellationToken cancellationToken, int? skip = null, int? limit = null)
+        {
+            var menus = await this._menuService.GetAll(cancellationToken);
+            var menusDto = this._mapper.Map<List<MenuDto>>(menus);
+
+            if (skip.HasValue)
+            {
+                menusDto = menusDto.Skip(skip.Value).ToList();
+            }
+
+            if (limit.HasValue)
+            {
+                menusDto = menusDto.Take(limit.Value).ToList();
+            }
+
+            return Ok(menusDto);
+        }
+
         [HttpPost("Add")]
         public async Task<ActionResult<MenuDto>> AddMenu(List<int> dishIds, string dateString)
         {
