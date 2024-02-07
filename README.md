@@ -10,6 +10,7 @@
   <li>etc...</li>
 </ul>
 
+## Project is migrated to MS SQL database.
 
 ### Technology used:
 <i>ASP .Net Core, Entity Framework, AutoMapper, Swagger, SignalR, SQL SMS</i>
