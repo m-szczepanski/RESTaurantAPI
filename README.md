@@ -13,4 +13,4 @@
 ## Project is migrated to MS SQL database.
 
 ### Technology used:
-<i>ASP .Net Core, Entity Framework, AutoMapper, Swagger, SignalR, SQL SMS</i>
+<i>ASP .Net Core, Entity Framework, AutoMapper, Swagger, SQL SMS</i>
