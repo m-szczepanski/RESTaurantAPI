@@ -68,7 +68,7 @@ namespace RESTaurantAPI.Services
         {
 
             var dateToday = DateTime.Today;
-            var table = GetTableBySeats.GetSpecyficTableBySeats(_dbContext.Tables, seatsNumber, cancellationToken);
+            var table = TableHelpers.GetTableBySeats(_dbContext.Tables, seatsNumber, cancellationToken);
 
             if (date == dateToday)
                 throw new ApplicationException("Cannot place reservation on the same day.");
