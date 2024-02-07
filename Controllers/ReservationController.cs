@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RESTaurantAPI.DTOs;
+using RESTaurantAPI.HelpingServices;
+using RESTaurantAPI.Models;
 using RESTaurantAPI.Services;
 
 namespace RESTaurantAPI.Controllers
@@ -44,17 +46,74 @@ namespace RESTaurantAPI.Controllers
             return Ok(reservationsDto);
         }
 
-
-
-        /*[HttpPost("AddReservation")]
-        public async Task<ActionResult<ReservationDto>> AddReservation(DateTime date, string hour, int seatsNumber,
-            CancellationToken cancellationToken)
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<ReservationDto>> GetById(int id, CancellationToken cancellationToken)
         {
-            var reservation = await this.reservationService.AddReservation(date, hour, seatsNumber, cancellationToken);
-            var reservationDto = this._mapper.Map<TableDto>(reservation);
+            var reservation = await this._reservationService.GetById(id, cancellationToken);
+            var reservationDto = this._mapper.Map<ReservationDto>(reservation);
+            if (reservationDto == null)
+            {
+                return NotFound();
+            }
 
             return Ok(reservationDto);
-        }*/
+        }
+
+        [HttpGet("GetByDate/{date}")]
+        public async Task<ActionResult<ReservationDto>> GetByDate(DateTime date, CancellationToken cancellationToken)
+        {
+            var reservation = await this._reservationService.GetByDate(date, cancellationToken);
+            var reservationDto = this._mapper.Map<ReservationDto>(reservation);
+            if (reservationDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservationDto);
+        }
+
+        [HttpGet("GetByTable/{id}")]
+        public async Task<ActionResult<ReservationDto>> GetByTable(int id, CancellationToken cancellationToken)
+        {
+            var reservations = await this._reservationService.GetByTable(id, cancellationToken);
+            var reservationsDto = this._mapper.Map<ReservationDto>(reservations);
+            if (reservationsDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservationsDto);
+        }
+
+        [HttpGet("GetByTable/{id}/{date}")]
+        public async Task<ActionResult<ReservationDto>> GetByTableAndDate(int id, DateTime date, CancellationToken cancellationToken)
+        {
+            var reservations = await this._reservationService.GetByTableAndDate(id, date, cancellationToken);
+            var reservationsDto = this._mapper.Map<ReservationDto>(reservations);
+            if (reservationsDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservationsDto);
+        }
+
+        [HttpPost("AddReservation")]
+        public async Task<ActionResult<ReservationDto>> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
+        {
+            var reservation = await this._reservationService.AddReservation(date, seatsNumber, cancellationToken);
+            var reservationDto = this._mapper.Map<ReservationDto>(reservation);
+
+            return Ok(reservationDto);
+        }
+
+        [HttpDelete("Cancel/{id}")]
+        public async Task<ActionResult> CancelReservation(int id, CancellationToken cancellationToken)
+        {
+            await this._reservationService.CancelReservation(id, cancellationToken);
+
+            return Ok("Reservation has been cancelled successfully");
+        }
 
     }
 }

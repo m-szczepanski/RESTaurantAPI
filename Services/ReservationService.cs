@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RESTaurantAPI.Models;
 using RESTaurantAPI.HelpingServices;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace RESTaurantAPI.Services
@@ -18,65 +19,62 @@ namespace RESTaurantAPI.Services
         public async Task<List<Reservation>> GetAllReservations(CancellationToken cancellationToken, int? skip = null,
             int? limit = null)
         {
-            var reservations = await this._dbContext.Reservations.ToListAsync(cancellationToken);
+            var reservations = await this._dbContext.Reservations
+                .Include(x=>x.Table).ToListAsync(cancellationToken);
 
             return reservations == null
                 ? throw new ApplicationException("No reservations are in the database right now.")
                 : reservations;
         }
 
-        public async Task<Reservation> GetReservationById(int reservationId, CancellationToken cancellationToken)
+        public async Task<Reservation> GetById(int reservationId, CancellationToken cancellationToken)
         {
             var reservation = await this._dbContext.Reservations.Where(x => x.Id == reservationId)
+                .Include(x=>x.Table)
                 .FirstOrDefaultAsync(cancellationToken);
 
             return reservation == null ? throw new ApplicationException("No reservation was found") : reservation;
         }
 
-        public async Task<List<Reservation>> GetReservationsByDate(DateTime date, CancellationToken cancellationToken)
+        public async Task<Reservation> GetByDate(DateTime date, CancellationToken cancellationToken)
         {
-            var reservations = await this._dbContext.Reservations.Where(x => x.Date == date).ToListAsync(cancellationToken);
+            var reservation = await this._dbContext.Reservations.Where(x => x.Date == date)
+                .Include(x=>x.Table).FirstOrDefaultAsync(cancellationToken);
 
-            return reservations == null
-                ? throw new ApplicationException($"No reservations were found for {date}.")
-                : reservations;
+            return reservation == null ? throw new ApplicationException($"No reservations were found for {date}.") : reservation;
         }
 
-        /*public async Task<List<Reservation>> GetReservationsByDateAndHour(DateTime date, TimeOnly hour,
-            CancellationToken cancellationToken)
+        public async Task<Reservation> GetByTable(int id, CancellationToken cancellationToken)
         {
-            var reservations = await _dbContext.Reservations.Where(x => x.Date == date && x.Hour == hour)
-                .ToListAsync(cancellationToken);
+            await TableHelpers.GetTableById(_dbContext.Tables, id, cancellationToken);
 
-            return reservations == null
-                ? throw new ApplicationException($"No reservations were found for {date}, {hour}.")
-                : reservations;
-        }*/
+            var reservation = await this._dbContext.Reservations.Where(x => x.Table.Id == id)
+                .Include(x=>x.Table)
+                .FirstOrDefaultAsync(cancellationToken);
 
-        /*public async Task<List<Dish>> GetReservationByTableId(int tableId, CancellationToken cancellationToken)
+            return reservation == null ? throw new ApplicationException($"No reservations were found this table.") : reservation;
+        }
+
+        public async Task<Reservation> GetByTableAndDate(int id, DateTime date, CancellationToken cancellationToken)
         {
-            var table = _dbContext.Tables.GetSpecyficTableById(tableId, cancellationToken);
-            var reservations = await _dbContext.Reservations.Where(x => x.Table.Id == table.Id).ToListAsync(cancellationToken);
+            await TableHelpers.GetTableById(_dbContext.Tables, id, cancellationToken);
 
-            return reservations == null ? throw new ApplicationException("No dishes with that cuisine were found") : reservations;
-        }*/
+            var reservation = await this._dbContext.Reservations
+                .Where(x => x.Table.Id == id && x.Date.Date == date.Date)
+                .Include(x => x.Table)
+                .FirstOrDefaultAsync(cancellationToken);
 
-        /*public async Task<List<Dish>> GetReservationByTableIdAndDate(int tableId, DateTime date, CancellationToken cancellationToken)*/
+            return reservation ?? throw new ApplicationException($"No reservations were found for this table and date.");
+        }
 
-        public async Task<Reservation> AddReservation(DateTime date, DateTime hour, int seatsNumber,
-            CancellationToken cancellationToken)
+        public async Task<Reservation> AddReservation(DateTime date, int seatsNumber, CancellationToken cancellationToken)
         {
-
-            var dateToday = DateTime.Today;
+            ReservationHelpers.ValidateDay(date);
             var table = TableHelpers.GetTableBySeats(_dbContext.Tables, seatsNumber, cancellationToken);
-
-            if (date == dateToday)
-                throw new ApplicationException("Cannot place reservation on the same day.");
 
             var newReservation = new Reservation
             {
                 Date = date,
-                Hour = hour,
                 NumberOfSeats = seatsNumber,
                 Table = table.Result
             };
@@ -87,25 +85,12 @@ namespace RESTaurantAPI.Services
             return newReservation;
         }
 
-        /*public async Task UpdateReservation(int reservationId, DateTime date, TimeOnly hour, int seatsNumber,
-            CancellationToken cancellationToken)
-        {
-            Reservation reservation =
-                await _dbContext.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId, cancellationToken);
-
-            reservation.Date = date;
-            reservation.Hour = hour;
-            reservation.NumberOfSeats = seatsNumber;
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }*/
-
         public async Task CancelReservation(int reservationId, CancellationToken cancellationToken)
         {
             var reservation =
                 await this._dbContext.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId, cancellationToken);
 
-            if (reservation != null)
+            if (reservation == null)
                 throw new ApplicationException("Reservation with that id doesn't exist.");
 
             _dbContext.Reservations.Remove(reservation);
