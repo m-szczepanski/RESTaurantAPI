@@ -23,6 +23,8 @@ namespace RESTaurantAPI.Services
         public async Task<List<Order>> GetAll(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
             var orders = await _dbContext.Orders
+                .Include(x=>x.Dish)
+                .Include(x=>x.Table)
                 .ToListAsync(cancellationToken);
 
             return orders == null ? throw new ApplicationException("No orders are in the database right now.") : orders;
@@ -30,14 +32,19 @@ namespace RESTaurantAPI.Services
 
         public async Task<Order> GetById(int id, CancellationToken cancellationToken)
         {
-            var order = await _dbContext.Orders.Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+            var order = await _dbContext.Orders.Where(x => x.Id == id)
+                .Include(x => x.Dish)
+                .Include(x => x.Table)
+                .FirstOrDefaultAsync(cancellationToken);
 
             return order == null ? throw new ApplicationException("No order found") : order;
         }
 
-        public async Task<List<Order>> GetInProgressOrders(CancellationToken cancellationToken, int? skip = null, int? limit = null)
+        public async Task<List<Order>> GetInPreparationOrders(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var orders = await _dbContext.Orders.Where(x=>x.Status == "in progress")
+            var orders = await _dbContext.Orders.Where(x=>x.Status == "in preparation")
+                .Include(x => x.Dish)
+                .Include(x => x.Table)
                 .ToListAsync(cancellationToken);
 
             return orders == null ? throw new ApplicationException("There are no orders that are in progress.") : orders;
@@ -46,6 +53,8 @@ namespace RESTaurantAPI.Services
         public async Task<List<Order>> GetDeliveredOrders(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
             var orders = await _dbContext.Orders.Where(x => x.Status == "delivered")
+                .Include(x => x.Dish)
+                .Include(x => x.Table)
                 .ToListAsync(cancellationToken);
 
             return orders == null ? throw new ApplicationException("There are no orders that are in progress.") : orders;
@@ -54,6 +63,8 @@ namespace RESTaurantAPI.Services
         public async Task<List<Order>> GetAllTablesOrders(int tableId, CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
             var orders = await _dbContext.Orders.Where(x => x.Table.Id == tableId)
+                .Include(x => x.Dish)
+                .Include(x => x.Table)
                 .ToListAsync(cancellationToken);
 
             return orders == null ? throw new ApplicationException("There are no orders that are in progress.") : orders;
