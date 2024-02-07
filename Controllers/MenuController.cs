@@ -44,10 +44,62 @@ namespace RESTaurantAPI.Controllers
             return Ok(menusDto);
         }
 
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<MenuDto>> GetById(int id, CancellationToken cancellationToken)
+        {
+            var menu = await this._menuService.GetById(id, cancellationToken);
+            var menuDto = this._mapper.Map<MenuDto>(menu);
+            if (menuDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(menuDto);
+        }
+
+        [HttpGet("GetByStartDate/{startDate}")]
+        public async Task<ActionResult<MenuDto>> GetByStartDate(DateTime startDate, CancellationToken cancellationToken)
+        {
+            var menu = await this._menuService.GetByStartDate(startDate, cancellationToken);
+            var menuDto = this._mapper.Map<MenuDto>(menu);
+            if (menuDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(menuDto);
+        }
+
+        [HttpGet("GetBetweenDates/{startDate}/{endDate}")]
+        public async Task<ActionResult<List<MenuDto>>> GetBetweenDates(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
+        {
+            var menu = await this._menuService.GetBetweenDates(startDate, endDate, cancellationToken);
+            var menuDto = this._mapper.Map<List<MenuDto>>(menu);
+            if (menuDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(menuDto);
+        }
+
+        [HttpGet("GetCurrentMenu")]
+        public async Task<ActionResult<MenuDto>> GetCurrentMenu(CancellationToken cancellationToken)
+        {
+            var menu = await this._menuService.GetCurrentMenu(cancellationToken);
+            var menuDto = this._mapper.Map<MenuDto>(menu);
+            if (menuDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(menuDto);
+        }
+
         [HttpPost("Add")]
         public async Task<ActionResult<MenuDto>> AddMenu(List<int> dishIds, string startDateString, string endDateString)
         {
-            var menu = await _menuService.AddMenu(dishIds, startDateString, endDateString);
+            var menu = await this._menuService.AddMenu(dishIds, startDateString, endDateString);
 
             var menuDto = _mapper.Map<MenuDto>(menu);
 
@@ -57,7 +109,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("UpdateStartDate/{id}")]
         public async Task<ActionResult> UpdateStartDate(int id, DateTime startDate, CancellationToken cancellationToken)
         {
-            await _menuService.UpdateStartDate(id, startDate, cancellationToken);
+            await this._menuService.UpdateStartDate(id, startDate, cancellationToken);
 
             return Ok("Start date has been modified.");
         }
@@ -65,7 +117,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("UpdateEndDate/{id}")]
         public async Task<ActionResult> UpdateEndDate(int id, DateTime endDate, CancellationToken cancellationToken)
         {
-            await _menuService.UpdateStartDate(id, endDate, cancellationToken);
+            await this.UpdateStartDate(id, endDate, cancellationToken);
 
             return Ok("End date has been modified.");
         }
