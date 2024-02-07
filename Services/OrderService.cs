@@ -32,7 +32,7 @@ namespace RESTaurantAPI.Services
 
         public async Task<Order> GetById(int id, CancellationToken cancellationToken)
         {
-            var order = await _dbContext.Orders.Where(x => x.Id == id)
+            var order = await this._dbContext.Orders.Where(x => x.Id == id)
                 .Include(x => x.Dish)
                 .Include(x => x.Table)
                 .FirstOrDefaultAsync(cancellationToken);
@@ -42,7 +42,7 @@ namespace RESTaurantAPI.Services
 
         public async Task<List<Order>> GetInPreparationOrders(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var orders = await _dbContext.Orders.Where(x=>x.Status == "in preparation")
+            var orders = await this._dbContext.Orders.Where(x=>x.Status == "in preparation")
                 .Include(x => x.Dish)
                 .Include(x => x.Table)
                 .ToListAsync(cancellationToken);
@@ -52,7 +52,7 @@ namespace RESTaurantAPI.Services
 
         public async Task<List<Order>> GetDeliveredOrders(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var orders = await _dbContext.Orders.Where(x => x.Status == "delivered")
+            var orders = await this._dbContext.Orders.Where(x => x.Status == "delivered")
                 .Include(x => x.Dish)
                 .Include(x => x.Table)
                 .ToListAsync(cancellationToken);
@@ -62,7 +62,7 @@ namespace RESTaurantAPI.Services
 
         public async Task<List<Order>> GetAllTablesOrders(int tableId, CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var orders = await _dbContext.Orders.Where(x => x.Table.Id == tableId)
+            var orders = await this._dbContext.Orders.Where(x => x.Table.Id == tableId)
                 .Include(x => x.Dish)
                 .Include(x => x.Table)
                 .ToListAsync(cancellationToken);
@@ -73,8 +73,8 @@ namespace RESTaurantAPI.Services
         public async Task<Order> AddOrder(int quantity, int tableId, int dishId, CancellationToken cancellationToken)
         {
 
-            Table table = await _dbContext.Tables.GetTableById(tableId, cancellationToken);
-            Dish dish = await _dbContext.Dishes.GetDishById(dishId, cancellationToken);
+            Table table = await this._dbContext.Tables.GetTableById(tableId, cancellationToken);
+            Dish dish = await this._dbContext.Dishes.GetDishById(dishId, cancellationToken);
 
             //var dishPrice = dish.Price;
             var orderPrice = dish.Price * quantity;
@@ -89,32 +89,27 @@ namespace RESTaurantAPI.Services
                 OrderPrice = orderPrice
             };
 
-            _dbContext.Orders.Add(newOrder);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            this._dbContext.Orders.Add(newOrder);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
 
             return newOrder;
         }
 
         public async Task MarkAsDelivered(int orderId, CancellationToken cancellationToken)
         {
-            Order order = await _dbContext.Orders.FirstOrDefaultAsync(s => s.Id == orderId, cancellationToken);
+            Order order = await this._dbContext.Orders.FirstOrDefaultAsync(s => s.Id == orderId, cancellationToken);
 
             order.Status = "delivered";
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteOrder(int id, CancellationToken cancellationToken)
         {
-            var order = await _dbContext.Orders.FirstOrDefaultAsync(x=>x.Id == id, cancellationToken);
+            var order = await this._dbContext.Orders.FirstOrDefaultAsync(x=>x.Id == id, cancellationToken) ?? throw new ApplicationException("Table with that id doesn't exists.");
 
-            if (order == null)
-            {
-                throw new ApplicationException("Table with that id doesn't exists.");
-            }
-
-            _dbContext.Orders.Remove(order);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            this._dbContext.Orders.Remove(order);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

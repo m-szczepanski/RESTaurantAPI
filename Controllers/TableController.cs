@@ -15,19 +15,19 @@ namespace RESTaurantAPI.Controllers
     public class TableController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly TableService tableService;
+        private readonly TableService _tableService;
 
         public TableController(TableService tableService, IMapper _mapper)
         {
             this._mapper = _mapper;
-            this.tableService = tableService;
+            this._tableService = tableService;
         }
 
         [HttpGet("GetAllTables")]
         public async Task<ActionResult<List<TableDto>>> GetAllTables(
             CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var tables = await this.tableService.GetAllTables(cancellationToken);
+            var tables = await this._tableService.GetAllTables(cancellationToken);
             var tablesDto = this._mapper.Map<List<TableDto>>(tables);
 
             if (skip.HasValue)
@@ -46,7 +46,7 @@ namespace RESTaurantAPI.Controllers
         [HttpGet("GetTableById/{tableId}")]
         public async Task<ActionResult<TableDto>> GetTableById(int tableId, CancellationToken cancellationToken)
         {
-            var table = await tableService.GetTableById(tableId, cancellationToken);
+            var table = await this._tableService.GetTableById(tableId, cancellationToken);
             var tableDto = this._mapper.Map<TableDto>(table);
             if (tableDto == null)
             {
@@ -59,7 +59,7 @@ namespace RESTaurantAPI.Controllers
         [HttpGet("GetEmptyTableBySeatsNumber/{seatsNumber}")]
         public async Task<ActionResult<List<TableDto>>> GetEmptyTableBySeatsNumber(int seatsNumber, CancellationToken cancellationToken)
         {
-            var tables = await tableService.GetEmptyTableBySeatsNumber(seatsNumber, cancellationToken);
+            var tables = await this._tableService.GetEmptyTableBySeatsNumber(seatsNumber, cancellationToken);
             var tablesDto = this._mapper.Map<List<TableDto>>(tables);
 
             if (tablesDto == null || tablesDto.Count == 0)
@@ -73,7 +73,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPost("AddTable")]
         public async Task<ActionResult<TableDto>> AddTable(int seats, bool availability, CancellationToken cancellationToken)
         {
-            var table = await this.tableService.AddTable(seats, availability, cancellationToken);
+            var table = await this._tableService.AddTable(seats, availability, cancellationToken);
             var tableDto = this._mapper.Map<TableDto>(table);
 
             return Ok(tableDto);
@@ -82,7 +82,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("Update/{id}")]
         public async Task<ActionResult> UpdateTable(int id, int seats, bool availability, CancellationToken cancellationToken)
         {
-            await tableService.UpdateTable(id, seats, availability, cancellationToken);
+            await this._tableService.UpdateTable(id, seats, availability, cancellationToken);
 
             return Ok("Table updated successfully.");
         }
@@ -90,7 +90,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("MarkAsTaken/{id}")]
         public async Task<ActionResult> MarkAsTaken(int id, CancellationToken cancellationToken)
         {
-            await tableService.MarkAsTaken(id, cancellationToken);
+            await this._tableService.MarkAsTaken(id, cancellationToken);
 
             return Ok("Table's status has been changed to taken.");
         }
@@ -98,7 +98,7 @@ namespace RESTaurantAPI.Controllers
         [HttpPut("MarkAsEmpty/{id}")]
         public async Task<ActionResult> MarkAsEmpty(int id, CancellationToken cancellationToken)
         {
-            await tableService.MarkAsEmpty(id, cancellationToken);
+            await this._tableService.MarkAsEmpty(id, cancellationToken);
 
             return Ok("Table's status has been changed to available.");
         }
@@ -106,7 +106,7 @@ namespace RESTaurantAPI.Controllers
         [HttpDelete("Delete/{id}")]
         public async Task<ActionResult> DeleteTable(int id, CancellationToken cancellationToken)
         {
-            await this.tableService.DeleteTable(id, cancellationToken);
+            await this._tableService.DeleteTable(id, cancellationToken);
 
             return Ok("Table deleted successfully");
         }

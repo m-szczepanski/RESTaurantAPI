@@ -12,16 +12,16 @@ namespace RESTaurantAPI.Services
 {
     public class TableService
     {
-        private readonly APIDbContext dbContext;
+        private readonly APIDbContext _dbContext;
 
         public TableService(APIDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            this._dbContext = dbContext;
         }
 
         public async Task<List<Table>> GetAllTables(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var tables = await dbContext.Tables
+            var tables = await this._dbContext.Tables
                 .ToListAsync(cancellationToken);
 
             return tables == null ? throw new ApplicationException("No tables are in the database right now.") : tables;
@@ -29,7 +29,7 @@ namespace RESTaurantAPI.Services
 
         public async Task<Table> GetTableById(int tableId, CancellationToken cancellationToken)
         {
-            var table = await dbContext.Tables.Where(x => x.Id == tableId).FirstOrDefaultAsync(cancellationToken);
+            var table = await this._dbContext.Tables.Where(x => x.Id == tableId).FirstOrDefaultAsync(cancellationToken);
 
             return table == null ? throw new ApplicationException("No table found") : table;
         }
@@ -42,59 +42,53 @@ namespace RESTaurantAPI.Services
                 Availability = availability,
             };
 
-            dbContext.Tables.Add(newTable);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            this._dbContext.Tables.Add(newTable);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
 
             return newTable;
         }
 
         public async Task<List<Table>> GetEmptyTableBySeatsNumber(int seatsNumber, CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var tables = await dbContext.Tables.Where(s => s.Seats == seatsNumber && s.Availability == true).ToListAsync(cancellationToken);
+            var tables = await this._dbContext.Tables.Where(s => s.Seats == seatsNumber && s.Availability == true).ToListAsync(cancellationToken);
 
             return tables == null ? throw new ApplicationException("No table with that number of seats is available at the moment.") : tables;
         }
 
         public async Task UpdateTable(int tableId, int seats, bool availability, CancellationToken cancellationToken)
         {
-            Table table = await dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
+            Table table = await this._dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
 
             table.Seats = seats;
             table.Availability = availability;
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task MarkAsTaken(int tableId, CancellationToken cancellationToken)
         {
-            Table table = await dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
+            Table table = await this._dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
 
             table.Availability = false;
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task MarkAsEmpty(int tableId, CancellationToken cancellationToken)
         {
-            Table table = await dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
-
+            Table table = await this._dbContext.Tables.FirstOrDefaultAsync(s => s.Id == tableId, cancellationToken);
 
             table.Availability = true;
 
-            await dbContext.SaveChangesAsync(cancellationToken);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteTable(int tableId, CancellationToken cancellationToken)
         {
-            var table = await dbContext.Tables.FirstOrDefaultAsync(x => x.Id == tableId, cancellationToken);
+            var table = await this._dbContext.Tables.FirstOrDefaultAsync(x => x.Id == tableId, cancellationToken) ?? throw new ApplicationException("Table with that id doesn't exists.");
 
-            if (table == null)
-            {
-                throw new ApplicationException("Table with that id doesn't exists.");
-            }
-
-            dbContext.Tables.Remove(table);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            this._dbContext.Tables.Remove(table);
+            await this._dbContext.SaveChangesAsync(cancellationToken);
         }
 
     }

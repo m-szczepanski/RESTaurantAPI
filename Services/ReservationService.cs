@@ -18,7 +18,7 @@ namespace RESTaurantAPI.Services
         public async Task<List<Reservation>> GetAllReservations(CancellationToken cancellationToken, int? skip = null,
             int? limit = null)
         {
-            var reservations = await _dbContext.Reservations.ToListAsync(cancellationToken);
+            var reservations = await this._dbContext.Reservations.ToListAsync(cancellationToken);
 
             return reservations == null
                 ? throw new ApplicationException("No reservations are in the database right now.")
@@ -27,7 +27,7 @@ namespace RESTaurantAPI.Services
 
         public async Task<Reservation> GetReservationById(int reservationId, CancellationToken cancellationToken)
         {
-            var reservation = await _dbContext.Reservations.Where(x => x.Id == reservationId)
+            var reservation = await this._dbContext.Reservations.Where(x => x.Id == reservationId)
                 .FirstOrDefaultAsync(cancellationToken);
 
             return reservation == null ? throw new ApplicationException("No reservation was found") : reservation;
@@ -35,7 +35,7 @@ namespace RESTaurantAPI.Services
 
         public async Task<List<Reservation>> GetReservationsByDate(DateTime date, CancellationToken cancellationToken)
         {
-            var reservations = await _dbContext.Reservations.Where(x => x.Date == date).ToListAsync(cancellationToken);
+            var reservations = await this._dbContext.Reservations.Where(x => x.Date == date).ToListAsync(cancellationToken);
 
             return reservations == null
                 ? throw new ApplicationException($"No reservations were found for {date}.")
@@ -67,7 +67,7 @@ namespace RESTaurantAPI.Services
             CancellationToken cancellationToken)
         {
 
-            var dateToday = DataHelper.GetTodayDate();
+            var dateToday = DateTime.Today;
             var table = GetTableBySeats.GetSpecyficTableBySeats(_dbContext.Tables, seatsNumber, cancellationToken);
 
             if (date == dateToday)
@@ -103,7 +103,7 @@ namespace RESTaurantAPI.Services
         public async Task CancelReservation(int reservationId, CancellationToken cancellationToken)
         {
             var reservation =
-                await _dbContext.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId, cancellationToken);
+                await this._dbContext.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId, cancellationToken);
 
             if (reservation != null)
                 throw new ApplicationException("Reservation with that id doesn't exist.");

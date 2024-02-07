@@ -16,19 +16,19 @@ namespace RESTaurantAPI.Controllers
     public class ReservationController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ReservationService reservationService;
+        private readonly ReservationService _reservationService;
 
         public ReservationController(ReservationService reservationService, IMapper _mapper)
         {
             this._mapper = _mapper;
-            this.reservationService = reservationService;
+            this._reservationService = reservationService;
         }
 
         [HttpGet("GetAllReservations")]
         public async Task<ActionResult<List<ReservationDto>>> GetAllReservations(
             CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
-            var reservations = await this.reservationService.GetAllReservations(cancellationToken);
+            var reservations = await this._reservationService.GetAllReservations(cancellationToken);
             var reservationsDto = this._mapper.Map<List<ReservationDto>>(reservations);
 
             if (skip.HasValue)
