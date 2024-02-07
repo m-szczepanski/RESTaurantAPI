@@ -77,8 +77,8 @@ namespace RESTaurantAPI.Services
             Dish dish = await this._dbContext.Dishes.GetDishById(dishId, cancellationToken);
 
             var orderPrice = dish.Price * quantity;
-            var validateId = TableHelpers.GetTableById(_dbContext.Tables,tableId, cancellationToken);
-
+            await TableHelpers.GetTableById(_dbContext.Tables,tableId, cancellationToken);
+            await DishHelpers.GetDishById(_dbContext.Dishes, dishId, cancellationToken);
 
             var newOrder = new Order
             {

@@ -18,7 +18,7 @@ namespace RESTaurantAPI.HelpingServices
         {
             Table table = await tables.FirstOrDefaultAsync(r => r.Seats == seats, cancellationToken);
 
-            return table;
+            return table == null ? throw new ApplicationException($"There are no tables with {seats} seats.") : table;
         }
     }
 }

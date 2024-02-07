@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RESTaurantAPI.Models;
 
 namespace RESTaurantAPI.HelpingServices
@@ -10,7 +11,7 @@ namespace RESTaurantAPI.HelpingServices
         {
             Dish dish = await dishes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-            return dish;
+            return dish == null ? throw new ApplicationException($"There is no dish of {id} id.") : dish;
         }
     }
 }
