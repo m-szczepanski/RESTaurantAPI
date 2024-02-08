@@ -53,9 +53,6 @@ app.UseRouting();
 app.UseCors("corsapp");
 app.UseAuthorization();
 
-
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
