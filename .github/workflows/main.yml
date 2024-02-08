@@ -26,3 +26,4 @@ jobs:
 
       - name: Publish
         run: dotnet publish ./RESTaurantAPI.sln --configuration Release --no-build
+
