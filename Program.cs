@@ -35,18 +35,17 @@ builder.Services.AddScoped<DishService>();
 
 
 //builder.Services.AddDbContext<APIDbContext>(options => options.UseInMemoryDatabase("localDb"));
-builder.Services.AddDbContext<APIDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AzureDatabase")));
-
+builder.Services.AddDbContext<APIDbContext>(options => options.UseSqlServer("DatabaseConnection"));
 
 var app = builder.Build();
-/*
+
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+/*if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-*/
+}*/
+
 
 app.UseSwagger();
 app.UseSwaggerUI();
