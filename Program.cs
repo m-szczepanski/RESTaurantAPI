@@ -34,7 +34,8 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<DishService>();
 
 
-builder.Services.AddDbContext<APIDbContext>(options => options.UseInMemoryDatabase("localDb"));
+//builder.Services.AddDbContext<APIDbContext>(options => options.UseInMemoryDatabase("localDb"));
+builder.Services.AddDbContext<APIDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AzureDatabase")));
 
 
 var app = builder.Build();
