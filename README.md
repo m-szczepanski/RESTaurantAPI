@@ -13,4 +13,4 @@
 ## Project is migrated to Azure SQL database.
 
 ### Technology used:
-<i>ASP .Net Core, Entity Framework, AutoMapper, Swagger, SQL SMS, Azure</i>
+<i>ASP .Net Core, Entity Framework, AutoMapper, Swagger, SQL SSMS, Azure</i>
