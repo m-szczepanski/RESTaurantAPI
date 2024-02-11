@@ -25,6 +25,7 @@ namespace RESTaurantAPI.Services
             var orders = await _dbContext.Orders
                 .Include(x=>x.Dish)
                 .Include(x=>x.Table)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return orders == null ? throw new ApplicationException("No orders are in the database right now.") : orders;
@@ -35,6 +36,7 @@ namespace RESTaurantAPI.Services
             var order = await this._dbContext.Orders.Where(x => x.Id == id)
                 .Include(x => x.Dish)
                 .Include(x => x.Table)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(cancellationToken);
 
             return order == null ? throw new ApplicationException("No order found") : order;
@@ -45,6 +47,7 @@ namespace RESTaurantAPI.Services
             var orders = await this._dbContext.Orders.Where(x=>x.Status == "in preparation")
                 .Include(x => x.Dish)
                 .Include(x => x.Table)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return orders == null ? throw new ApplicationException("There are no orders that are in progress.") : orders;
@@ -55,6 +58,7 @@ namespace RESTaurantAPI.Services
             var orders = await this._dbContext.Orders.Where(x => x.Status == "delivered")
                 .Include(x => x.Dish)
                 .Include(x => x.Table)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return orders == null ? throw new ApplicationException("There are no orders that are in progress.") : orders;
@@ -65,6 +69,7 @@ namespace RESTaurantAPI.Services
             var orders = await this._dbContext.Orders.Where(x => x.Table.Id == tableId)
                 .Include(x => x.Dish)
                 .Include(x => x.Table)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return orders == null ? throw new ApplicationException("There are no orders that are in progress.") : orders;

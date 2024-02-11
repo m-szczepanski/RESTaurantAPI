@@ -21,6 +21,7 @@ namespace RESTaurantAPI.Services
         public async Task<List<Employee>> GetAllEmployees(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
             var employees = await this._dbContext.Employees
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return employees == null ? throw new ApplicationException("No employees are in the database right now.") : employees;
@@ -28,21 +29,28 @@ namespace RESTaurantAPI.Services
 
         public async Task<Employee> GetEmployeeById(int employeeId, CancellationToken cancellationToken)
         {
-            var employee = await this._dbContext.Employees.Where(x => x.Id == employeeId).FirstOrDefaultAsync(cancellationToken);
+            var employee = await this._dbContext.Employees.Where(x => x.Id == employeeId)
+                .AsNoTracking().FirstOrDefaultAsync(cancellationToken);
 
             return employee == null ? throw new ApplicationException("No employee found") : employee;
         }
         
         public async Task<List<Employee>> GetEmployeesByRole(string employeeRole, CancellationToken cancellationToken)
         {
-            var employees = await this._dbContext.Employees.Where(x => x.Role == employeeRole).ToListAsync(cancellationToken);
+            var employees = await this._dbContext.Employees
+                .Where(x => x.Role == employeeRole)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             return employees == null ? throw new ApplicationException("No employee with that role was found") : employees;
         }
 
         public async Task<List<Employee>> GetEmployeesByLastName(string lastName, CancellationToken cancellationToken)
         {
-            var employees = await this._dbContext.Employees.Where(x => x.LastName == lastName).ToListAsync(cancellationToken);
+            var employees = await this._dbContext.Employees
+                .Where(x => x.LastName == lastName)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             return employees == null ? throw new ApplicationException("No employee with that last name was found") : employees;
         }

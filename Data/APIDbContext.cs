@@ -24,7 +24,5 @@ namespace RESTaurantAPI.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Dish> Dishes { get; set; }
 
-        
-
     }
 }
