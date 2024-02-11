@@ -22,6 +22,7 @@ namespace RESTaurantAPI.Services
         public async Task<List<Dish>> GetAllDishes(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
             var dishes = await this._dbContext.Dishes
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes are in the database right now.") : dishes;
@@ -29,42 +30,54 @@ namespace RESTaurantAPI.Services
 
         public async Task<Dish> GetDishById(int dishId, CancellationToken cancellationToken)
         {
-            var dish = await this._dbContext.Dishes.Where(x => x.Id == dishId).FirstOrDefaultAsync(cancellationToken);
+            var dish = await this._dbContext.Dishes.Where(x => x.Id == dishId)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken);
 
             return dish == null ? throw new ApplicationException("No dish was found") : dish;
         }
 
         public async Task<List<Dish>> GetDishByName(string dishName, CancellationToken cancellationToken)
         {
-            var dishes = await this._dbContext.Dishes.Where(x => x.DishName == dishName).ToListAsync(cancellationToken);
+            var dishes = await this._dbContext.Dishes.Where(x => x.DishName == dishName)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dish with that name was found") : dishes;
         }
 
         public async Task<List<Dish>> GetDishesFromCuisine(string cuisine, CancellationToken cancellationToken)
         {
-            var dishes = await this._dbContext.Dishes.Where(x => x.Cuisine == cuisine).ToListAsync(cancellationToken);
+            var dishes = await this._dbContext.Dishes.Where(x => x.Cuisine == cuisine)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes with that cuisine were found") : dishes;
         }
         
         public async Task<List<Dish>> GetVeganDishes(CancellationToken cancellationToken)
         {
-            var dishes = await this._dbContext.Dishes.Where(x => x.Vegan == true).ToListAsync(cancellationToken);
+            var dishes = await this._dbContext.Dishes.Where(x => x.Vegan == true)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }
 
         public async Task<List<Dish>> GetVegetarianDishes(CancellationToken cancellationToken)
         {
-            var dishes = await this._dbContext.Dishes.Where(x => x.Vegetarian == true).ToListAsync(cancellationToken);
+            var dishes = await this._dbContext.Dishes.Where(x => x.Vegetarian == true)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }
 
         public async Task<List<Dish>> GetSpicyDishes(CancellationToken cancellationToken)
         {
-            var dishes = await this._dbContext.Dishes.Where(x => x.Spicy == true).ToListAsync(cancellationToken);
+            var dishes = await this._dbContext.Dishes.Where(x => x.Spicy == true)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             return dishes == null ? throw new ApplicationException("No dishes were found") : dishes;
         }

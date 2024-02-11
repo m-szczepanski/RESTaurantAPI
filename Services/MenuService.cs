@@ -23,6 +23,7 @@ namespace RESTaurantAPI.Services
         {
             var menus = await this._dbContext.Menus
                 .Include(x=>x.Dishes)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return menus == null ? throw new ApplicationException("No orders are in the database right now.") : menus;
@@ -30,14 +31,18 @@ namespace RESTaurantAPI.Services
 
         public async Task<Menu> GetById(int id, CancellationToken cancellationToken)
         {
-            var menu = await this._dbContext.Menus.Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+            var menu = await this._dbContext.Menus.Where(x => x.Id == id)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken);
 
             return menu == null ? throw new ApplicationException("No menu was found") : menu;
         }
 
         public async Task<Menu> GetByStartDate(DateTime startDate, CancellationToken cancellationToken)
         {
-            var menu = await this._dbContext.Menus.Where(x => x.StartDate == startDate).FirstOrDefaultAsync(cancellationToken);
+            var menu = await this._dbContext.Menus.Where(x => x.StartDate == startDate)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken);
 
             return menu == null ? throw new ApplicationException("No menu found") : menu;
         }
@@ -45,7 +50,9 @@ namespace RESTaurantAPI.Services
         public async Task<List<Menu>> GetBetweenDates(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
         {
             var menus = await this._dbContext.Menus.Where(t => t.StartDate <= startDate && t.EndDate >= endDate)
-                .Include(x=>x.Dishes).ToListAsync(cancellationToken);
+                .Include(x=>x.Dishes)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             return menus == null ? throw new ApplicationException("No menu found") : menus;
         }
@@ -54,7 +61,9 @@ namespace RESTaurantAPI.Services
         {
             var todayDate = DateTime.Today;
             var menu = await this._dbContext.Menus.Where(t => t.StartDate <= todayDate && t.EndDate >= todayDate)
-                .Include(x=>x.Dishes).FirstOrDefaultAsync(cancellationToken);
+                .Include(x=>x.Dishes)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken);
 
             return menu == null ? throw new ApplicationException("There's no current menu in the database.") : menu;
         }

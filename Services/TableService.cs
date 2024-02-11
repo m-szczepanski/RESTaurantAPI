@@ -22,6 +22,7 @@ namespace RESTaurantAPI.Services
         public async Task<List<Table>> GetAllTables(CancellationToken cancellationToken, int? skip = null, int? limit = null)
         {
             var tables = await this._dbContext.Tables
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             return tables == null ? throw new ApplicationException("No tables are in the database right now.") : tables;
@@ -29,7 +30,9 @@ namespace RESTaurantAPI.Services
 
         public async Task<Table> GetTableById(int tableId, CancellationToken cancellationToken)
         {
-            var table = await this._dbContext.Tables.Where(x => x.Id == tableId).FirstOrDefaultAsync(cancellationToken);
+            var table = await this._dbContext.Tables.Where(x => x.Id == tableId)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken);
 
             return table == null ? throw new ApplicationException("No table found") : table;
         }
